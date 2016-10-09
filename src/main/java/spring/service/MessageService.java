@@ -29,6 +29,8 @@ public class MessageService {
     private ServerConfig serverConfig;
 
     public String handleMessage(String body) {
+        System.out.println("body: " + body);
+
         WXBizMsgCrypt wxBizMsgCrypt;
         try {
             wxBizMsgCrypt = new WXBizMsgCrypt(serverConfig.getToken(), serverConfig.getEncodingAESKey(), serverConfig.getAppId());
