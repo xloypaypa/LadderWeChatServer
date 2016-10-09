@@ -24,7 +24,6 @@ public class MessageService {
 
     private final static Logger logger = Logger.getLogger(TokenService.class);
     private final static Random random = new Random();
-    private final static String format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%1$s]]></Encrypt></xml>";
 
     @Autowired
     private ServerConfig serverConfig;
@@ -41,8 +40,7 @@ public class MessageService {
         }
 
         try {
-            Document request = DocumentHelper.parseText(body);
-            Element requestRootElement = decode(request.getRootElement(), wxBizMsgCrypt, httpServletRequest);
+            Element requestRootElement = decode(body, wxBizMsgCrypt, httpServletRequest);
             String from = requestRootElement.element("FromUserName").getText();
             String to = requestRootElement.element("ToUserName").getText();
             String messageType = requestRootElement.element("MsgType").getText();
@@ -69,19 +67,17 @@ public class MessageService {
         return reply;
     }
 
-    private Element decode(Element message, WXBizMsgCrypt wxBizMsgCrypt, HttpServletRequest httpServletRequest) throws AesException, DocumentException {
+    private Element decode(String body, WXBizMsgCrypt wxBizMsgCrypt, HttpServletRequest httpServletRequest) throws AesException, DocumentException {
         String msgSignature = httpServletRequest.getParameter("signature");
         String timeStamp = httpServletRequest.getParameter("timestamp");
         String nonce = httpServletRequest.getParameter("nonce");
-        String encrypt = message.elementText("Encrypt");
-        String fromXML = String.format(format, encrypt);
 
         System.out.println(msgSignature);
         System.out.println(timeStamp);
         System.out.println(nonce);
-        System.out.println(fromXML);
+        System.out.println(body);
 
-        return DocumentHelper.parseText(wxBizMsgCrypt.decryptMsg(msgSignature, timeStamp, nonce, fromXML)).getRootElement();
+        return DocumentHelper.parseText(wxBizMsgCrypt.decryptMsg(msgSignature, timeStamp, nonce, body)).getRootElement();
     }
 
     private String encrypt(String message, WXBizMsgCrypt wxBizMsgCrypt, Date timeStamp, int nonce) throws AesException {
