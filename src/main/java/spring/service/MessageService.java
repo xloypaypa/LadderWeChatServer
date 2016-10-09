@@ -72,6 +72,20 @@ public class MessageService {
         String nonce = message.elementText("Nonce");
         String encrypt = message.elementText("Encrypt");
         String fromXML = String.format(format, encrypt);
+
+        if (msgSignature == null) {
+            System.out.println("msgSignature");
+        }
+        if (timeStamp == null) {
+            System.out.println("timeStamp");
+        }
+        if (nonce == null) {
+            System.out.println("nonce");
+        }
+        if (encrypt == null) {
+            System.out.println("encrypt");
+        }
+
         return DocumentHelper.parseText(wxBizMsgCrypt.decryptMsg(msgSignature, timeStamp, nonce, fromXML)).getRootElement();
     }
 
