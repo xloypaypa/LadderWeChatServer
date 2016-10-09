@@ -11,6 +11,7 @@ import spring.config.ServerConfig;
 import tools.aes.AesException;
 import tools.aes.WXBizMsgCrypt;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Random;
 
@@ -28,7 +29,7 @@ public class MessageService {
     @Autowired
     private ServerConfig serverConfig;
 
-    public String handleMessage(String body) {
+    public String handleMessage(HttpServletRequest httpServletRequest, String body) {
         System.out.println("body: " + body);
 
         WXBizMsgCrypt wxBizMsgCrypt;
@@ -41,7 +42,7 @@ public class MessageService {
 
         try {
             Document request = DocumentHelper.parseText(body);
-            Element requestRootElement = decode(request.getRootElement(), wxBizMsgCrypt);
+            Element requestRootElement = decode(request.getRootElement(), wxBizMsgCrypt, httpServletRequest);
             String from = requestRootElement.element("FromUserName").getText();
             String to = requestRootElement.element("ToUserName").getText();
             String messageType = requestRootElement.element("MsgType").getText();
@@ -68,10 +69,10 @@ public class MessageService {
         return reply;
     }
 
-    private Element decode(Element message, WXBizMsgCrypt wxBizMsgCrypt) throws AesException, DocumentException {
-        String msgSignature = message.elementText("MsgSignature");
-        String timeStamp = message.elementText("TimeStamp");
-        String nonce = message.elementText("Nonce");
+    private Element decode(Element message, WXBizMsgCrypt wxBizMsgCrypt, HttpServletRequest httpServletRequest) throws AesException, DocumentException {
+        String msgSignature = httpServletRequest.getParameter("signature");
+        String timeStamp = httpServletRequest.getParameter("timestamp");
+        String nonce = httpServletRequest.getParameter("nonce");
         String encrypt = message.elementText("Encrypt");
         String fromXML = String.format(format, encrypt);
 
