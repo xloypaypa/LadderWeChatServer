@@ -39,11 +39,6 @@ public class WeChatController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public String message(HttpServletRequest httpServletRequest, @RequestBody String body) {
-        Enumeration paramNames = httpServletRequest.getParameterNames();
-        while(paramNames.hasMoreElements()) {
-            String paramName = (String)paramNames.nextElement();
-            System.out.println(paramName+": "+httpServletRequest.getParameter(paramName));
-        }
         return messageService.handleMessage(httpServletRequest, body);
     }
 
