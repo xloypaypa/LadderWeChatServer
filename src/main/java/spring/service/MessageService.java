@@ -79,7 +79,7 @@ public class MessageService {
         System.out.println(msgSignature);
         System.out.println(timeStamp);
         System.out.println(nonce);
-        System.out.println(encrypt);
+        System.out.println(fromXML);
 
         return DocumentHelper.parseText(wxBizMsgCrypt.decryptMsg(msgSignature, timeStamp, nonce, fromXML)).getRootElement();
     }
