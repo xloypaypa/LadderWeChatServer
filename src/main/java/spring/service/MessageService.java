@@ -68,14 +68,9 @@ public class MessageService {
     }
 
     private Element decode(String body, WXBizMsgCrypt wxBizMsgCrypt, HttpServletRequest httpServletRequest) throws AesException, DocumentException {
-        String msgSignature = httpServletRequest.getParameter("signature");
+        String msgSignature = httpServletRequest.getParameter("msg_signature");
         String timeStamp = httpServletRequest.getParameter("timestamp");
         String nonce = httpServletRequest.getParameter("nonce");
-
-        System.out.println(msgSignature);
-        System.out.println(timeStamp);
-        System.out.println(nonce);
-        System.out.println(body);
 
         return DocumentHelper.parseText(wxBizMsgCrypt.decryptMsg(msgSignature, timeStamp, nonce, body)).getRootElement();
     }
