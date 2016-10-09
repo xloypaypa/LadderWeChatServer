@@ -1,5 +1,6 @@
 package spring.service;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.config.TokenConfig;
@@ -17,6 +18,8 @@ public class TokenService {
     @Autowired
     private TokenConfig tokenConfig;
 
+    private final static Logger logger = Logger.getLogger(TokenService.class);
+
     public boolean validateToken(HttpServletRequest request) {
         String signature = request.getParameter("signature");
         String timestamp = request.getParameter("timestamp");
@@ -29,8 +32,10 @@ public class TokenService {
                 key = key + string;
             }
             String pwd = SHA1.encode(key);
-            return pwd.equals(signature);
+            logger.warn("validate token success.");
+            return signature.equals(pwd);
         }else {
+            logger.warn("validate token failed.");
             return false;
         }
     }
