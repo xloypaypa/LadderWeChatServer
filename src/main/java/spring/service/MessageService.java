@@ -47,7 +47,7 @@ public class MessageService {
             String message = requestRootElement.element("Content").getText();
             logger.debug("from: " + from + " to: " + to + " message: " + message);
 
-            Document reply = buildReply(to, messageType);
+            Document reply = buildReply(from, messageType);
             return encrypt(reply.asXML(), wxBizMsgCrypt, new Date(), random.nextInt());
         } catch (DocumentException | AesException e) {
             e.printStackTrace();
@@ -55,11 +55,11 @@ public class MessageService {
         }
     }
 
-    private Document buildReply(String to, String messageType) {
+    private Document buildReply(String from, String messageType) {
         Document reply = DocumentHelper.createDocument();
         Element replyRootElement = reply.addElement("xml");
-        replyRootElement.addElement("ToUserName").setText(serverConfig.getOriginalId());
-        replyRootElement.addElement("FromUserName").setText(to);
+        replyRootElement.addElement("ToUserName").setText(from);
+        replyRootElement.addElement("FromUserName").setText(serverConfig.getOriginalId());
         replyRootElement.addElement("CreateTime").setText(new Date().getTime() + "");
         replyRootElement.addElement("MsgType").setText(messageType);
         replyRootElement.addElement("Content").setText("I have received your message");
