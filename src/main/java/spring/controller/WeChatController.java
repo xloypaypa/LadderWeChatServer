@@ -43,11 +43,7 @@ public class WeChatController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
     public String message(HttpServletRequest request, @RequestBody String body) {
-        if (tokenService.validateToken(request)) {
-            return messageService.handleMessage(body);
-        } else {
-            return "error";
-        }
+        return messageService.handleMessage(body);
     }
 
 }
