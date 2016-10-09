@@ -23,6 +23,7 @@ public class MessageService {
 
     private final static Logger logger = Logger.getLogger(TokenService.class);
     private final static Random random = new Random();
+    private final static String format = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%1$s]]></Encrypt></xml>";
 
     @Autowired
     private ServerConfig serverConfig;
@@ -70,7 +71,8 @@ public class MessageService {
         String timeStamp = message.elementText("TimeStamp");
         String nonce = message.elementText("Nonce");
         String encrypt = message.elementText("Encrypt");
-        return DocumentHelper.parseText(wxBizMsgCrypt.decryptMsg(msgSignature, timeStamp, nonce, encrypt)).getRootElement();
+        String fromXML = String.format(format, encrypt);
+        return DocumentHelper.parseText(wxBizMsgCrypt.decryptMsg(msgSignature, timeStamp, nonce, fromXML)).getRootElement();
     }
 
     private String encrypt(String message, WXBizMsgCrypt wxBizMsgCrypt, Date timeStamp, int nonce) throws AesException {
