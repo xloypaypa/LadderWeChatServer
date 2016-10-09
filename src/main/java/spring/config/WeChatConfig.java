@@ -13,8 +13,8 @@ import org.springframework.context.annotation.PropertySource;
 public class WeChatConfig {
 
     @Bean
-    public TokenConfig ladderConfig() {
-        return new TokenConfig();
+    public ServerConfig ladderConfig() {
+        return new ServerConfig();
     }
 
 }

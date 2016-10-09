@@ -42,7 +42,7 @@ public class WeChatController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST)
-    public String message(HttpServletRequest request, @RequestBody String body) {
+    public String message(@RequestBody String body) {
         return messageService.handleMessage(body);
     }
 

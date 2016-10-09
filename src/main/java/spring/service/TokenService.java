@@ -3,7 +3,7 @@ package spring.service;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spring.config.TokenConfig;
+import spring.config.ServerConfig;
 import tools.SHA1;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class TokenService {
 
     @Autowired
-    private TokenConfig tokenConfig;
+    private ServerConfig serverConfig;
 
     private final static Logger logger = Logger.getLogger(TokenService.class);
 
@@ -25,7 +25,7 @@ public class TokenService {
         String timestamp = request.getParameter("timestamp");
         String nonce = request.getParameter("nonce");
         if (signature != null && timestamp != null && nonce != null ) {
-            String[] strSet = new String[] { tokenConfig.getToken(), timestamp, nonce };
+            String[] strSet = new String[] { serverConfig.getToken(), timestamp, nonce };
             java.util.Arrays.sort(strSet);
             String key = "";
             for (String string : strSet) {
