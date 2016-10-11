@@ -2,6 +2,8 @@ package spring.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import tools.aes.AesException;
+import tools.aes.WXBizMsgCrypt;
 
 @Component
 public class ServerConfig {
@@ -18,6 +20,8 @@ public class ServerConfig {
     @Value("#{'${EncodingAESKey}'}")
     private String encodingAESKey;
 
+    private WXBizMsgCrypt wxBizMsgCrypt = null;
+
     public String getAppId() {
         return appId;
     }
@@ -32,5 +36,16 @@ public class ServerConfig {
 
     public String getEncodingAESKey() {
         return encodingAESKey;
+    }
+
+    public WXBizMsgCrypt getWxBizMsgCrypt() throws AesException {
+        if (this.wxBizMsgCrypt == null) {
+            synchronized (ServerConfig.class) {
+                if (this.wxBizMsgCrypt == null) {
+                    wxBizMsgCrypt = new WXBizMsgCrypt(this.getToken(), this.getEncodingAESKey(), this.getAppId());
+                }
+            }
+        }
+        return wxBizMsgCrypt;
     }
 }

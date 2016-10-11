@@ -8,10 +8,12 @@ import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.config.ServerConfig;
+import spring.service.session.SessionManager;
 import tools.aes.AesException;
 import tools.aes.WXBizMsgCrypt;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 
@@ -28,12 +30,13 @@ public class MessageService {
     @Autowired
     private ServerConfig serverConfig;
 
-    public String handleMessage(HttpServletRequest httpServletRequest, String body) {
-        System.out.println("body: " + body);
+    @Autowired
+    private SessionManager sessionManager;
 
+    public String handleMessage(HttpServletRequest httpServletRequest, String body) {
         WXBizMsgCrypt wxBizMsgCrypt;
         try {
-            wxBizMsgCrypt = new WXBizMsgCrypt(serverConfig.getToken(), serverConfig.getEncodingAESKey(), serverConfig.getAppId());
+            wxBizMsgCrypt = serverConfig.getWxBizMsgCrypt();
         } catch (AesException e) {
             e.printStackTrace();
             return "init wx crypt error";
@@ -45,24 +48,41 @@ public class MessageService {
             String to = requestRootElement.element("ToUserName").getText();
             String messageType = requestRootElement.element("MsgType").getText();
             String message = requestRootElement.element("Content").getText();
-            logger.debug("from: " + from + " to: " + to + " message: " + message);
+            logger.debug("from: " + from + " to: " + to + " message: " + message + " messageType: " + messageType);
 
-            Document reply = buildReply(from, messageType);
+            sessionManager.createSession(from);
+
+            sessionManager.getSessionMessage(from).addMessage("/testCommand#{}".getBytes());
+
+            byte[] bytes;
+            while (true) {
+                bytes = sessionManager.getSessionMessage(from).getMessages();
+                if (bytes != null) {
+                    break;
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Document reply = buildReply(from, messageType, new String(bytes));
             return encrypt(reply.asXML(), wxBizMsgCrypt, new Date(), random.nextInt());
-        } catch (DocumentException | AesException e) {
+        } catch (DocumentException | AesException | IOException e) {
             e.printStackTrace();
             return "solve message error";
         }
     }
 
-    private Document buildReply(String from, String messageType) {
+    private Document buildReply(String from, String messageType, String s) {
         Document reply = DocumentHelper.createDocument();
         Element replyRootElement = reply.addElement("xml");
         replyRootElement.addElement("ToUserName").setText(from);
         replyRootElement.addElement("FromUserName").setText(serverConfig.getOriginalId());
         replyRootElement.addElement("CreateTime").setText(new Date().getTime() + "");
         replyRootElement.addElement("MsgType").setText(messageType);
-        replyRootElement.addElement("Content").setText("I have received your message");
+        replyRootElement.addElement("Content").setText(s);
         logger.debug("reply: " + reply.asXML());
         return reply;
     }

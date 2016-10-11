@@ -10,10 +10,10 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @PropertySource(value = "file:./WeChat.properties")
-public class WeChatConfig {
+public class WeChatServerConfigLoader {
 
     @Bean
-    public ServerConfig ladderConfig() {
+    public ServerConfig serverConfig() {
         return new ServerConfig();
     }
 
