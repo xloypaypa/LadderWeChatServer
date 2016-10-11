@@ -8,6 +8,7 @@ import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.config.ServerConfig;
+import spring.service.ladder.LadderMessageService;
 import spring.service.session.SessionManager;
 import tools.aes.AesException;
 import tools.aes.WXBizMsgCrypt;
@@ -31,7 +32,7 @@ public class MessageService {
     private ServerConfig serverConfig;
 
     @Autowired
-    private SessionManager sessionManager;
+    private LadderMessageService ladderMessageService;
 
     public String handleMessage(HttpServletRequest httpServletRequest, String body) {
         WXBizMsgCrypt wxBizMsgCrypt;
@@ -50,26 +51,9 @@ public class MessageService {
             String message = requestRootElement.element("Content").getText();
             logger.debug("from: " + from + " to: " + to + " message: " + message + " messageType: " + messageType);
 
-            sessionManager.createSession(from);
-
-            sessionManager.getSessionMessage(from).addMessage("/testCommand#{}".getBytes());
-
-            byte[] bytes;
-            while (true) {
-                bytes = sessionManager.getSessionMessage(from).getMessages();
-                if (bytes != null) {
-                    break;
-                }
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            Document reply = buildReply(from, messageType, new String(bytes));
+            Document reply = buildReply(from, messageType, ladderMessageService.handleMessage(from, messageType, message));
             return encrypt(reply.asXML(), wxBizMsgCrypt, new Date(), random.nextInt());
-        } catch (DocumentException | AesException | IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return "solve message error";
         }

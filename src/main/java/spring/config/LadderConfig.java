@@ -28,6 +28,9 @@ public class LadderConfig {
     @Value("#{'${maxConnectionNumber}'}")
     private int maxConnectionNumber;
 
+    @Value("#{'${timeOut}'}")
+    private long timeOut;
+
     public String getIp() {
         return ip;
     }
@@ -50,5 +53,9 @@ public class LadderConfig {
 
     public int getMaxConnectionNumber() {
         return maxConnectionNumber;
+    }
+
+    public long getTimeOut() {
+        return timeOut;
     }
 }

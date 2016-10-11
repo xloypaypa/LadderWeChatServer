@@ -33,7 +33,7 @@ public class SessionManager {
     }
 
     public synchronized void closeSession(String weChatId) {
-        this.sessionMessageMap.remove(weChatId);
+        this.sessionMessageMap.remove(weChatId).getLadderServerSolver().whenClosing();
     }
 
     public synchronized SessionMessage getSessionMessage(String weChatId) {
