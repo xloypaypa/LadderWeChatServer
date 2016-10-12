@@ -2,6 +2,7 @@ package spring.service.session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import spring.config.LadderConfig;
 import spring.service.ladder.LadderServerSolver;
 import spring.service.ladder.LadderService;
 
@@ -20,6 +21,9 @@ public class SessionManager {
     @Autowired
     private LadderService ladderService;
 
+    @Autowired
+    private LadderConfig ladderConfig;
+
     private Map<String, SessionMessage> sessionMessageMap;
 
     private SessionManager() {
@@ -27,7 +31,7 @@ public class SessionManager {
     }
 
     public synchronized void createSession(String weChatId) throws IOException {
-        LadderServerSolver connectionSolver = new LadderServerSolver(weChatId, this);
+        LadderServerSolver connectionSolver = new LadderServerSolver(weChatId, this, ladderConfig);
         ladderService.connect(connectionSolver);
         sessionMessageMap.put(weChatId, new SessionMessage(connectionSolver));
     }

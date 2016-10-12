@@ -2,6 +2,7 @@ package spring.service.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
 
 import java.util.HashMap;
@@ -18,6 +19,9 @@ public class CacheService {
 
     @Autowired
     private SessionManager sessionManager;
+
+    @Autowired
+    private LadderConfig ladderConfig;
 
     private Map<String, UserStatus> old, young;
     private ReadWriteLock readWriteLock;
@@ -92,7 +96,7 @@ public class CacheService {
 
     private UserStatus createCache(String weChatId) {
         readWriteLock.writeLock().lock();
-        UserStatus userStatus = new UserStatus(sessionManager);
+        UserStatus userStatus = new UserStatus(sessionManager, ladderConfig);
         young.put(weChatId, userStatus);
         readWriteLock.writeLock().unlock();
         return new UserStatus(userStatus);

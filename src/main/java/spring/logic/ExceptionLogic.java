@@ -1,5 +1,6 @@
 package spring.logic;
 
+import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
 
 /**
@@ -8,8 +9,8 @@ import spring.service.session.SessionManager;
  */
 class ExceptionLogic extends WeChatLogic {
 
-    ExceptionLogic(SessionManager sessionManager, String s) {
-        super(sessionManager);
+    ExceptionLogic(SessionManager sessionManager, LadderConfig ladderConfig, String s) {
+        super(sessionManager, ladderConfig);
     }
 
     @Override

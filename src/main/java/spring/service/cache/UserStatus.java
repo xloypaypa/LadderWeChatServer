@@ -1,5 +1,6 @@
 package spring.service.cache;
 
+import spring.config.LadderConfig;
 import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
 import spring.service.session.SessionManager;
@@ -12,8 +13,8 @@ public class UserStatus {
 
     private WeChatLogic currentLogic;
 
-    UserStatus(SessionManager sessionManager) {
-        this.currentLogic = new StartLogic(sessionManager);
+    UserStatus(SessionManager sessionManager, LadderConfig ladderConfig) {
+        this.currentLogic = new StartLogic(sessionManager, ladderConfig);
     }
 
     UserStatus(UserStatus userStatus) {

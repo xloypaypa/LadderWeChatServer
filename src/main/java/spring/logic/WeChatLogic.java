@@ -1,5 +1,6 @@
 package spring.logic;
 
+import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
 
 import java.io.IOException;
@@ -15,9 +16,11 @@ import java.util.concurrent.TimeoutException;
 public abstract class WeChatLogic {
 
     SessionManager sessionManager;
+    LadderConfig ladderConfig;
 
-    WeChatLogic(SessionManager sessionManager) {
+    WeChatLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
         this.sessionManager = sessionManager;
+        this.ladderConfig = ladderConfig;
     }
 
     public abstract String getReplyFromServer();
@@ -47,7 +50,7 @@ public abstract class WeChatLogic {
                     break;
                 }
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     break;
                 }

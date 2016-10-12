@@ -1,7 +1,12 @@
 package spring.config;
 
+import model.config.ConfigResourceManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import spring.tools.RSA;
+
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * Created by xsu on 16/10/11.
@@ -31,6 +36,9 @@ public class LadderConfig {
     @Value("#{'${timeOut}'}")
     private long timeOut;
 
+    private PublicKey serverPublicKey = null, localPublicKey = null;
+    private PrivateKey localPrivateKey = null;
+
     public String getIp() {
         return ip;
     }
@@ -39,16 +47,19 @@ public class LadderConfig {
         return port;
     }
 
-    public String getServerKey() {
-        return serverKey;
+    public PublicKey getServerKey() {
+        initKey();
+        return serverPublicKey;
     }
 
-    public String getPublicKey() {
-        return publicKey;
+    public PublicKey getPublicKey() {
+        initKey();
+        return localPublicKey;
     }
 
-    public String getPrivateKey() {
-        return privateKey;
+    public PrivateKey getPrivateKey() {
+        initKey();
+        return localPrivateKey;
     }
 
     public int getMaxConnectionNumber() {
@@ -57,5 +68,18 @@ public class LadderConfig {
 
     public long getTimeOut() {
         return timeOut;
+    }
+
+    private void initKey() {
+        if (serverPublicKey == null) {
+            synchronized (LadderConfig.class) {
+                if (serverPublicKey == null) {
+                    ConfigResourceManager configResourceManager = ConfigResourceManager.getConfigResourceManager();
+                    serverPublicKey = RSA.bytes2PublicKey(configResourceManager.getResource(serverKey));
+                    localPublicKey = RSA.bytes2PublicKey(configResourceManager.getResource(publicKey));
+                    localPrivateKey = RSA.bytes2PrivateKey(configResourceManager.getResource(privateKey));
+                }
+            }
+        }
     }
 }

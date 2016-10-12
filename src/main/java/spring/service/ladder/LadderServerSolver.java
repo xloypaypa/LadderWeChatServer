@@ -10,12 +10,13 @@ import net.tool.packageSolver.packageReader.PackageReader;
 import net.tool.packageSolver.packageWriter.LadderProtocolWriter;
 import net.tool.packageSolver.packageWriter.PackageWriter;
 import net.tool.packageSolver.packageWriter.packageWriterFactory.LadderProtocolFactory;
+import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
+import spring.tools.RSA;
 
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.UUID;
 
 /**
  * Created by xlo on 16/2/26.
@@ -23,18 +24,22 @@ import java.util.UUID;
  */
 public class LadderServerSolver extends AbstractServer {
 
-    protected volatile PackageReader packageReader;
-    protected volatile PackageWriter packageWriter;
+    private volatile PackageReader packageReader;
+    private volatile PackageWriter packageWriter;
+
+    private volatile boolean isEncrypt = false;
 
     private boolean isConnected = false;
 
     private final String weChatId;
     private final SessionManager sessionManager;
+    private final LadderConfig ladderConfig;
 
-    public LadderServerSolver(String weChatId, SessionManager sessionManager) {
+    public LadderServerSolver(String weChatId, SessionManager sessionManager, LadderConfig ladderConfig) {
         super(new ConnectionMessageImpl());
         this.weChatId = weChatId;
         this.sessionManager = sessionManager;
+        this.ladderConfig = ladderConfig;
     }
 
     @Override
@@ -166,16 +171,23 @@ public class LadderServerSolver extends AbstractServer {
         return null;
     }
 
-    protected byte[] encrypt(byte[] message) throws Exception {
-        return message;
+    private byte[] encrypt(byte[] message) throws Exception {
+        if (isEncrypt) {
+            return RSA.encrypt(ladderConfig.getServerKey(), message);
+        } else {
+            return message;
+        }
     }
 
-    protected byte[] decrypt(byte[] message) throws Exception {
-        return message;
+    private byte[] decrypt(byte[] message) throws Exception {
+        if (isEncrypt) {
+            return RSA.decrypt(ladderConfig.getPrivateKey(), message);
+        } else {
+            return message;
+        }
     }
 
-    public boolean isConnected() {
-        return isConnected;
+    public void setEncrypt(boolean encrypt) {
+        isEncrypt = encrypt;
     }
-
 }
