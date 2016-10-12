@@ -17,7 +17,6 @@ import spring.tools.RSA;
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.security.PrivateKey;
 
 /**
  * Created by xlo on 16/2/26.
@@ -30,12 +29,9 @@ public class LadderServerSolver extends AbstractServer {
 
     private volatile boolean isEncrypt = false;
 
-    private boolean isConnected = false;
-
     private final String weChatId;
     private final SessionManager sessionManager;
     private final LadderConfig ladderConfig;
-    private PrivateKey privateKey;
 
     public LadderServerSolver(String weChatId, SessionManager sessionManager, LadderConfig ladderConfig) {
         super(new ConnectionMessageImpl());
@@ -96,7 +92,7 @@ public class LadderServerSolver extends AbstractServer {
         }
     }
 
-    protected ConnectionStatus getNextStatusWhenPackageEnd() {
+    private ConnectionStatus getNextStatusWhenPackageEnd() {
         if (this.packageWriter.getPackageQueueSize() == 0) {
             this.getConnectionMessage().getSelectionKey().interestOps(SelectionKey.OP_READ);
         } else {
@@ -152,7 +148,6 @@ public class LadderServerSolver extends AbstractServer {
             SocketChannel socket = this.getConnectionMessage().getSocket();
             try {
                 if (socket.finishConnect()) {
-                    this.isConnected = true;
                     return getNextStatusWhenPackageEnd();
                 } else {
                     return ConnectionStatus.CONNECTING;
@@ -189,7 +184,7 @@ public class LadderServerSolver extends AbstractServer {
 
     private byte[] decrypt(byte[] message) throws Exception {
         if (isEncrypt) {
-            return RSA.decrypt(privateKey, message);
+            return RSA.decrypt(ladderConfig.getPrivateKey(), message);
         } else {
             return message;
         }
@@ -197,9 +192,5 @@ public class LadderServerSolver extends AbstractServer {
 
     public void setEncrypt(boolean encrypt) {
         isEncrypt = encrypt;
-    }
-
-    public void setPrivateKey(PrivateKey privateKey) {
-        this.privateKey = privateKey;
     }
 }
