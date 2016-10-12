@@ -76,7 +76,7 @@ public abstract class WeChatLogic {
             System.out.println("ladder: " + new String(message));
             System.out.println("--------------------------");
             int index = 0;
-            while (message[index] != '#') {
+            while (message[index] != '#' && index < message.length) {
                 index++;
             }
             command = new String(message, 0, index);
