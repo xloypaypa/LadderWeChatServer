@@ -30,20 +30,21 @@ public class StartLogic extends WeChatLogic {
             return new ExceptionLogic(this.sessionManager, ladderConfig, "can't connect");
         }
 
-        LadderReply keyReply = askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 1000);
-        if (keyReply == null) {
+        try {
+            askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 1000);
+            sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
+
+            LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 1000);
+            String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
+
+            LadderReply loginReply = askLadderServer(weChatId,
+                    ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 100);
+
+            closeSession(weChatId);
+            return new TestLogic(sessionManager, ladderConfig, new String(loginReply.getBody()));
+        } catch (Exception e) {
+            closeSession(weChatId);
             return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
         }
-        sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
-
-        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 1000);
-        if (sessionReply == null) {
-            return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
-        }
-        String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
-
-        closeSession(weChatId);
-
-        return new TestLogic(sessionManager, ladderConfig, sessionId);
     }
 }

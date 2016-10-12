@@ -35,13 +35,13 @@ public abstract class WeChatLogic {
         sessionManager.closeSession(weChatId);
     }
 
-    LadderReply askLadderServer(String weChatId, byte[] message, long timeOout) {
+    LadderReply askLadderServer(String weChatId, byte[] message, long timeOut) throws Exception {
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().addMessage(message);
 
-        return waitForReply(weChatId, timeOout);
+        return waitForReply(weChatId, timeOut);
     }
 
-    private LadderReply waitForReply(String weChatId, long timeOut) {
+    private LadderReply waitForReply(String weChatId, long timeOut) throws Exception {
         FutureTask<byte[]> futureTask = new FutureTask<>(() -> {
             byte[] bytes;
             while (true) {
@@ -64,7 +64,7 @@ public abstract class WeChatLogic {
             return new LadderReply(futureTask.get(timeOut, TimeUnit.SECONDS));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             futureTask.cancel(true);
-            return null;
+            throw e;
         }
     }
 
@@ -73,8 +73,6 @@ public abstract class WeChatLogic {
         private byte[] body;
 
         LadderReply(byte[] message) {
-            System.out.println("ladder: " + new String(message));
-            System.out.println("--------------------------");
             int index = 0;
             while (message[index] != '#' && index < message.length) {
                 index++;

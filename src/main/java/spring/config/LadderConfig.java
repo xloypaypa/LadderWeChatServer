@@ -36,6 +36,12 @@ public class LadderConfig {
     @Value("#{'${timeOut}'}")
     private long timeOut;
 
+    @Value("#{'${username}'}")
+    private String username;
+
+    @Value("#{'${password}'}")
+    private String password;
+
     private PublicKey serverPublicKey = null, localPublicKey = null;
     private PrivateKey localPrivateKey = null;
 
@@ -68,6 +74,14 @@ public class LadderConfig {
 
     public long getTimeOut() {
         return timeOut;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     private void initKey() {
