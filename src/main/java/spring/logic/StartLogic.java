@@ -30,10 +30,16 @@ public class StartLogic extends WeChatLogic {
             return new ExceptionLogic(this.sessionManager, ladderConfig, "can't connect");
         }
 
-        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 1000);
+        LadderReply keyReply = askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 1000);
+        if (keyReply == null) {
+            return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
+        }
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
         LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 1000);
+        if (sessionReply == null) {
+            return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
+        }
         String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
 
         closeSession(weChatId);

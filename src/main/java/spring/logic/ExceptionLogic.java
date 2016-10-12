@@ -9,17 +9,20 @@ import spring.service.session.SessionManager;
  */
 class ExceptionLogic extends WeChatLogic {
 
-    ExceptionLogic(SessionManager sessionManager, LadderConfig ladderConfig, String s) {
+    private String message;
+
+    ExceptionLogic(SessionManager sessionManager, LadderConfig ladderConfig, String message) {
         super(sessionManager, ladderConfig);
+        this.message = message;
     }
 
     @Override
     public String getReplyFromServer() {
-        return null;
+        return message;
     }
 
     @Override
     public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
-        return null;
+        return new StartLogic(sessionManager, ladderConfig);
     }
 }
