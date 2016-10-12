@@ -33,7 +33,7 @@ public abstract class WeChatLogic {
     }
 
     LadderReply askLadderServer(String weChatId, byte[] message, long timeOout) {
-        sessionManager.getSessionMessage(weChatId).addMessage(message);
+        sessionManager.getSessionMessage(weChatId).getLadderServerSolver().addMessage(message);
 
         return waitForReply(weChatId, timeOout);
     }
