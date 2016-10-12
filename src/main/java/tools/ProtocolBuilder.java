@@ -33,6 +33,13 @@ public class ProtocolBuilder {
         return ("/login#" + body).getBytes();
     }
 
+    public static byte[] changeConnectionUserByWeChat(String weChatId) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("weChatId", weChatId);
+        String body = jsonObject.toString();
+        return ("changeConnectionUserByWeChat#" + body).getBytes();
+    }
+
     public static byte[] register(String username, String password) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);

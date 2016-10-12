@@ -31,17 +31,20 @@ public class StartLogic extends WeChatLogic {
         }
 
         try {
-            askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 1000);
+            askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
             sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
-            LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 1000);
+            LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
             String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
 
             LadderReply loginReply = askLadderServer(weChatId,
-                    ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 100);
+                    ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
+
+            LadderReply changeReply = askLadderServer(weChatId,
+                    ProtocolBuilder.changeConnectionUserByWeChat(weChatId), 500);
 
             closeSession(weChatId);
-            return new TestLogic(sessionManager, ladderConfig, new String(loginReply.getBody()));
+            return new TestLogic(sessionManager, ladderConfig, new String(changeReply.getBody()));
         } catch (Exception e) {
             closeSession(weChatId);
             return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
