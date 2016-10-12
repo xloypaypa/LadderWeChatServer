@@ -70,6 +70,7 @@ public abstract class WeChatLogic {
         private byte[] body;
 
         LadderReply(byte[] message) {
+            System.out.println("ladder: " + new String(message));
             int index = 0;
             while (message[index] != '#') {
                 index++;
@@ -79,6 +80,10 @@ public abstract class WeChatLogic {
             for (int i = index + 1; i < message.length; i++) {
                 body[i - index - 1] = message[i];
             }
+
+            System.out.println(command);
+            System.out.println(new String(body));
+            System.out.println();
         }
 
         String getCommand() {
