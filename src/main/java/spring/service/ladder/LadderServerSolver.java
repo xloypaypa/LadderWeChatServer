@@ -111,7 +111,13 @@ public class LadderServerSolver extends AbstractServer {
     }
 
     public void addMessage(byte[] message) {
-        byte[] commandPackage = LadderProtocolFactory.getLadderProtocolFactory().setMessage(message).getLadderProtocolByte();
+        byte[] encrypt = message;
+        try {
+            encrypt = encrypt(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        byte[] commandPackage = LadderProtocolFactory.getLadderProtocolFactory().setMessage(encrypt).getLadderProtocolByte();
         this.packageWriter.addPackage(commandPackage, 0);
         this.getConnectionMessage().getSelectionKey().interestOps(SelectionKey.OP_WRITE);
         this.getConnectionMessage().getSelectionKey().selector().wakeup();
