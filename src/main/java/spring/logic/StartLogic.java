@@ -46,12 +46,12 @@ public class StartLogic extends WeChatLogic {
 
             closeSession(weChatId);
 
-            System.out.println("result: " + result);
-
             if (result.equals("fail")) {
                 return new ExceptionLogic(this.sessionManager, ladderConfig, "server error");
             } else if (result.equals("unbind account")) {
                 return new UnbindLogic(this.sessionManager, this.ladderConfig);
+            } else if (result.equals("ok")) {
+                return new TestLogic(sessionManager, ladderConfig, "auto login");
             } else {
                 return new TestLogic(sessionManager, ladderConfig, new String(changeReply.getBody()));
             }
