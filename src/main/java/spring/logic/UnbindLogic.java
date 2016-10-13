@@ -9,17 +9,17 @@ import java.io.IOException;
 
 /**
  * Created by xsu on 16/10/12.
- * it's the logic when start connections
+ * it's the logic to solve unbind user
  */
-public class StartLogic extends WeChatLogic {
+class UnbindLogic extends WeChatLogic {
 
-    public StartLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
+    UnbindLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
         super(sessionManager, ladderConfig);
     }
 
     @Override
     public String getReplyFromServer() {
-        return null;
+        return "you not bind account. reply 1 to bind; 2 to register";
     }
 
     @Override
@@ -40,18 +40,14 @@ public class StartLogic extends WeChatLogic {
             askLadderServer(weChatId,
                     ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
 
-            LadderReply changeReply = askLadderServer(weChatId,
-                    ProtocolBuilder.changeConnectionUserByWeChat(weChatId), 500);
-            String result = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
-
             closeSession(weChatId);
 
-            if (result.equals("fail")) {
-                return new ExceptionLogic(this.sessionManager, ladderConfig, "server error");
-            } else if (result.equals("unbind account")) {
-                return new UnbindLogic(this.sessionManager, this.ladderConfig);
+            if (message.equals("1")) {
+                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, true);
+            } else if (message.equals("2")) {
+                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, false);
             } else {
-                return new TestLogic(sessionManager, ladderConfig, new String(changeReply.getBody()));
+                return new ExceptionLogic(this.sessionManager, this.ladderConfig, "invalidate input");
             }
         } catch (Exception e) {
             closeSession(weChatId);

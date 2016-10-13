@@ -8,22 +8,27 @@ import tools.ProtocolBuilder;
 import java.io.IOException;
 
 /**
- * Created by xsu on 16/10/12.
- * it's the logic when start connections
+ * Created by xsu on 16/10/13.
+ * it's the logic for ask password
  */
-public class StartLogic extends WeChatLogic {
+class AskPasswordLogic extends WeChatLogic {
 
-    public StartLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
+    private boolean forBind;
+    private String username;
+
+    AskPasswordLogic(SessionManager sessionManager, LadderConfig ladderConfig, boolean forBind, String username) {
         super(sessionManager, ladderConfig);
+        this.forBind = forBind;
+        this.username = username;
     }
 
     @Override
     public String getReplyFromServer() {
-        return null;
+        return "Please input your password";
     }
 
     @Override
-    public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
+    public WeChatLogic getReplyFromUser(String weChatId, String messageType, String password) {
         try {
             createSession(weChatId);
         } catch (IOException e) {
@@ -40,19 +45,18 @@ public class StartLogic extends WeChatLogic {
             askLadderServer(weChatId,
                     ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
 
-            LadderReply changeReply = askLadderServer(weChatId,
-                    ProtocolBuilder.changeConnectionUserByWeChat(weChatId), 500);
-            String result = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
+            LadderReply ladderReply;
+            if (forBind) {
+                ladderReply = askLadderServer(weChatId,
+                        ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId), 500);
+            } else {
+                ladderReply = askLadderServer(weChatId,
+                        ProtocolBuilder.register(username, password), 500);
+            }
 
             closeSession(weChatId);
 
-            if (result.equals("fail")) {
-                return new ExceptionLogic(this.sessionManager, ladderConfig, "server error");
-            } else if (result.equals("unbind account")) {
-                return new UnbindLogic(this.sessionManager, this.ladderConfig);
-            } else {
-                return new TestLogic(sessionManager, ladderConfig, new String(changeReply.getBody()));
-            }
+            return new TestLogic(this.sessionManager, this.ladderConfig, new String(ladderReply.getBody()));
         } catch (Exception e) {
             closeSession(weChatId);
             return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");

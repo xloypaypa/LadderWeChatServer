@@ -40,6 +40,22 @@ public class ProtocolBuilder {
         return ("changeConnectionUserByWeChat#" + body).getBytes();
     }
 
+    public static byte[] bindUserAndWeChat(String username, String password, String sessionID, String weChatId) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", username);
+        jsonObject.put("password", PasswordEncoder.encode(password + sessionID));
+        jsonObject.put("weChatId", weChatId);
+        String body = jsonObject.toString();
+        return ("bindUserAndWeChat#" + body).getBytes();
+    }
+
+    public static byte[] unbindUserAndWeChat(String weChatId) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("weChatId", weChatId);
+        String body = jsonObject.toString();
+        return ("unbindUserAndWeChat#" + body).getBytes();
+    }
+
     public static byte[] register(String username, String password) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", username);
