@@ -42,7 +42,7 @@ public class StartLogic extends WeChatLogic {
 
             LadderReply changeReply = askLadderServer(weChatId,
                     ProtocolBuilder.changeConnectionUserByWeChat(weChatId), 500);
-            String result = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
+            String result = JSONObject.fromObject(new String(changeReply.getBody())).getString("result");
 
             closeSession(weChatId);
 
