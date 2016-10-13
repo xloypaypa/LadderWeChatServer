@@ -8,18 +8,19 @@ import tools.ProtocolBuilder;
 import java.io.IOException;
 
 /**
- * Created by xsu on 16/10/12.
- * it's the logic to solve unbind user
+ * Created by xsu on 16/10/13.
+ * it's the logic ask user use app or unbind
+ * it's maybe have more logic
  */
-class UnbindLogic extends WeChatLogic {
+class AppOrUnbindLogic extends WeChatLogic {
 
-    UnbindLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
+    AppOrUnbindLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
         super(sessionManager, ladderConfig);
     }
 
     @Override
     public String getReplyFromServer() {
-        return "you not bind account. reply 1 to bind; 2 to register";
+        return "Please reply 1 to Use application, 2 to unbind your account";
     }
 
     @Override
@@ -40,14 +41,17 @@ class UnbindLogic extends WeChatLogic {
             askLadderServer(weChatId,
                     ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
 
-            closeSession(weChatId);
-
-            if (message.equals("1")) {
-                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, true);
-            } else if (message.equals("2")) {
-                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, false);
-            } else {
-                return new ExceptionLogic(this.sessionManager, this.ladderConfig, "invalidate input");
+            switch (message) {
+                case "1":
+                    closeSession(weChatId);
+                    return new TestLogic(this.sessionManager, this.ladderConfig, "still in progress");
+                case "2":
+                    askLadderServer(weChatId,
+                            ProtocolBuilder.unbindUserAndWeChat(weChatId), 500);
+                    return new StartLogic(this.sessionManager, this.ladderConfig);
+                default:
+                    closeSession(weChatId);
+                    return new ExceptionLogic(this.sessionManager, ladderConfig, "invalidate input");
             }
         } catch (Exception e) {
             closeSession(weChatId);
