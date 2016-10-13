@@ -13,7 +13,7 @@ class TestLogic extends WeChatLogic {
 
     @Override
     public String getReplyFromServer() {
-        return "session id: " + sessionId;
+        return "debug message: " + sessionId;
     }
 
     @Override
