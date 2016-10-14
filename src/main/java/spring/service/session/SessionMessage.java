@@ -14,7 +14,7 @@ public class SessionMessage {
     private LadderServerSolver ladderServerSolver;
     private List<byte[]> messages;
 
-    public SessionMessage(LadderServerSolver ladderServerSolver) {
+    SessionMessage(LadderServerSolver ladderServerSolver) {
         this.ladderServerSolver = ladderServerSolver;
         this.messages = new LinkedList<>();
     }
