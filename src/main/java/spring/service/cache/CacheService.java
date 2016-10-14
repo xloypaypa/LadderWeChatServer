@@ -1,6 +1,8 @@
 package spring.service.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
@@ -15,7 +17,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * it's the cache service
  */
 @Service
+@PropertySource(value = "file:./ladder.properties")
 public class CacheService {
+
+    @Value("#{'${cacheTimeOut}'}")
+    private long cacheTimeOut;
 
     @Autowired
     private SessionManager sessionManager;
@@ -37,7 +43,7 @@ public class CacheService {
                 //noinspection InfiniteLoopStatement
                 while (true) {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(cacheTimeOut);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
