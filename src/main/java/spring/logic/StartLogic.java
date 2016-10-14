@@ -19,7 +19,7 @@ public class StartLogic extends WeChatLogic {
 
     @Override
     public String getReplyFromServer() {
-        return null;
+        return "";
     }
 
     @Override
