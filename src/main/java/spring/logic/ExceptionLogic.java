@@ -22,7 +22,8 @@ class ExceptionLogic extends WeChatLogic {
     }
 
     @Override
-    public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
+    WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
         return new StartLogic(sessionManager, ladderConfig);
     }
+
 }

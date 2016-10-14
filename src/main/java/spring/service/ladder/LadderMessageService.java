@@ -2,14 +2,9 @@ package spring.service.ladder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import spring.config.LadderConfig;
 import spring.logic.WeChatLogic;
 import spring.service.cache.CacheService;
 import spring.service.cache.UserStatus;
-import spring.service.session.SessionManager;
-
-import java.io.IOException;
-import java.util.concurrent.*;
 
 /**
  * Created by xsu on 16/10/11.

@@ -9,7 +9,6 @@ import spring.service.ladder.LadderService;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by xlo on 16/2/29.

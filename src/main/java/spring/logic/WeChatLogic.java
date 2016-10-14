@@ -24,14 +24,31 @@ public abstract class WeChatLogic {
     }
 
     public abstract String getReplyFromServer();
+    
+    abstract WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception;
 
-    public abstract WeChatLogic getReplyFromUser(String weChatId, String messageType, String message);
+    public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
+        try {
+            createSession(weChatId);
+        } catch (IOException e) {
+            return new ExceptionLogic(this.sessionManager, ladderConfig, "can't connect");
+        }
 
-    void createSession(String weChatId) throws IOException {
+        WeChatLogic result;
+        try {
+            result = solveLadderLogic(weChatId, messageType, message);
+        } catch (Exception e) {
+            result = new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
+        }
+        closeSession(weChatId);
+        return result;
+    }
+
+    private void createSession(String weChatId) throws IOException {
         sessionManager.createSession(weChatId);
     }
 
-    void closeSession(String weChatId) {
+    private void closeSession(String weChatId) {
         sessionManager.closeSession(weChatId);
     }
 

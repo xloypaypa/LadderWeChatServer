@@ -10,7 +10,6 @@ import spring.service.MessageService;
 import spring.service.TokenService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 
 /**
  * Created by xsu on 16/10/8.

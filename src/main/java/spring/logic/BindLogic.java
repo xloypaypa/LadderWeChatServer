@@ -5,8 +5,6 @@ import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
-import java.io.IOException;
-
 /**
  * Created by xsu on 16/10/12.
  * it's the logic to solve unbind user
@@ -23,36 +21,24 @@ class BindLogic extends WeChatLogic {
     }
 
     @Override
-    public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
-        try {
-            createSession(weChatId);
-        } catch (IOException e) {
-            return new ExceptionLogic(this.sessionManager, ladderConfig, "can't connect");
-        }
+    WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
+        sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
-        try {
-            askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
-            sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
+        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
+        String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
 
-            LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
-            String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
+        askLadderServer(weChatId,
+                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
 
-            askLadderServer(weChatId,
-                    ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
-
-            closeSession(weChatId);
-
-            switch (message) {
-                case "1":
-                    return new AskUserNameLogic(this.sessionManager, this.ladderConfig, true);
-                case "2":
-                    return new AskUserNameLogic(this.sessionManager, this.ladderConfig, false);
-                default:
-                    return new ExceptionLogic(this.sessionManager, this.ladderConfig, "invalidate input");
-            }
-        } catch (Exception e) {
-            closeSession(weChatId);
-            return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
+        switch (message) {
+            case "1":
+                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, true);
+            case "2":
+                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, false);
+            default:
+                return new ExceptionLogic(this.sessionManager, this.ladderConfig, "invalidate input");
         }
     }
+
 }
