@@ -22,15 +22,6 @@ class BindLogic extends WeChatLogic {
 
     @Override
     WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
-        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
-        sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
-
-        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
-        String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
-
-        askLadderServer(weChatId,
-                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
-
         switch (message) {
             case "1":
                 return new AskUserNameLogic(this.sessionManager, this.ladderConfig, true);
