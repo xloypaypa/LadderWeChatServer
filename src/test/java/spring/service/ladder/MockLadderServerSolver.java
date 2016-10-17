@@ -21,7 +21,10 @@ public class MockLadderServerSolver extends LadderServerSolver {
 
     @Override
     public void addMessage(byte[] message) {
-        replyMap.get(new String(message)).reply();
+        MessageReply messageReply = replyMap.get(new String(message));
+        if (messageReply != null) {
+            messageReply.reply();
+        }
     }
 
     public void putReply(byte[] message, byte[] reply, long waitTime) {

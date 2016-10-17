@@ -78,7 +78,7 @@ public abstract class WeChatLogic {
         thread.start();
 
         try {
-            return new LadderReply(futureTask.get(timeOut, TimeUnit.SECONDS));
+            return new LadderReply(futureTask.get(timeOut, TimeUnit.MILLISECONDS));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             futureTask.cancel(true);
             throw e;

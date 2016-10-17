@@ -1,5 +1,6 @@
 package spring.service.session;
 
+import spring.config.MockLadderConfig;
 import spring.service.ladder.MockLadderServerSolver;
 
 import java.io.IOException;
@@ -10,9 +11,15 @@ import java.io.IOException;
  */
 public class MockSessionManager extends SessionManager {
 
+    public MockSessionManager(MockLadderConfig mockLadderConfig) {
+        this.ladderConfig = mockLadderConfig;
+    }
+
     public synchronized void createSession(String weChatId) throws IOException {
-        MockLadderServerSolver ladderServerSolver = new MockLadderServerSolver(weChatId, this, ladderConfig);
-        sessionMessageMap.put(weChatId, new SessionMessage(ladderServerSolver));
+        if (!sessionMessageMap.containsKey(weChatId)) {
+            MockLadderServerSolver ladderServerSolver = new MockLadderServerSolver(weChatId, this, ladderConfig);
+            sessionMessageMap.put(weChatId, new SessionMessage(ladderServerSolver));
+        }
     }
 
     public synchronized void closeSession(String weChatId) {

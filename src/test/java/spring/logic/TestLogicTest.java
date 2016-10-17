@@ -1,6 +1,7 @@
 package spring.logic;
 
 import org.junit.Test;
+import spring.config.MockLadderConfig;
 import spring.service.session.MockSessionManager;
 import spring.service.session.SessionManager;
 
@@ -14,7 +15,7 @@ public class TestLogicTest {
 
     @Test
     public void testTestLogicMessageAndReply() throws Exception {
-        SessionManager sessionManager = new MockSessionManager();
+        SessionManager sessionManager = new MockSessionManager(new MockLadderConfig());
 
         TestLogic testLogic = new TestLogic(sessionManager, null, "message");
 
