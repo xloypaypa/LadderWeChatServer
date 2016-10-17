@@ -29,8 +29,8 @@ public class LadderServerSolver extends AbstractServer {
 
     private volatile boolean isEncrypt = false;
 
-    private final String weChatId;
-    private final SessionManager sessionManager;
+    final String weChatId;
+    final SessionManager sessionManager;
     private final LadderConfig ladderConfig;
 
     public LadderServerSolver(String weChatId, SessionManager sessionManager, LadderConfig ladderConfig) {
@@ -114,22 +114,6 @@ public class LadderServerSolver extends AbstractServer {
             e.printStackTrace();
         }
         byte[] commandPackage = LadderProtocolFactory.getLadderProtocolFactory().setMessage(encrypt).getLadderProtocolByte();
-        this.packageWriter.addPackage(commandPackage, 0);
-        this.getConnectionMessage().getSelectionKey().interestOps(SelectionKey.OP_WRITE);
-        this.getConnectionMessage().getSelectionKey().selector().wakeup();
-    }
-
-    public void addMessage(String url, byte[] message) {
-        url += "#";
-        byte[] all = new byte[url.getBytes().length + message.length];
-        System.arraycopy(url.getBytes(), 0, all, 0, url.getBytes().length);
-        System.arraycopy(message, 0, all, url.getBytes().length, message.length);
-        try {
-            all = encrypt(all);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        byte[] commandPackage = LadderProtocolFactory.getLadderProtocolFactory().setMessage(all).getLadderProtocolByte();
         this.packageWriter.addPackage(commandPackage, 0);
         this.getConnectionMessage().getSelectionKey().interestOps(SelectionKey.OP_WRITE);
         this.getConnectionMessage().getSelectionKey().selector().wakeup();

@@ -4,16 +4,16 @@ import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
 
 class TestLogic extends WeChatLogic {
-    private String sessionId;
+    private String message;
 
-    TestLogic(SessionManager sessionManager, LadderConfig ladderConfig, String sessionId) {
+    TestLogic(SessionManager sessionManager, LadderConfig ladderConfig, String message) {
         super(sessionManager, ladderConfig);
-        this.sessionId = sessionId;
+        this.message = message;
     }
 
     @Override
     public String getReplyFromServer() {
-        return "debug message: " + sessionId;
+        return "debug message: " + message;
     }
 
     @Override

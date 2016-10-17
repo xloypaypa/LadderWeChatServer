@@ -21,11 +21,11 @@ public class SessionManager {
     private LadderService ladderService;
 
     @Autowired
-    private LadderConfig ladderConfig;
+    LadderConfig ladderConfig;
 
-    private Map<String, SessionMessage> sessionMessageMap;
+    Map<String, SessionMessage> sessionMessageMap;
 
-    private SessionManager() {
+    SessionManager() {
         sessionMessageMap = new HashMap<>();
     }
 
