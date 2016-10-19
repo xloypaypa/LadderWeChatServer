@@ -22,7 +22,6 @@ public class TestLogicTest {
         WeChatLogic weChatLogic = testLogic.getReplyFromUser("id", "es", "es");
 
         assertEquals("debug message: message", testLogic.getReplyFromServer());
-        assertEquals(TestLogic.class, weChatLogic.getClass());
-        assertEquals("debug message: use cache", weChatLogic.getReplyFromServer());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
     }
 }

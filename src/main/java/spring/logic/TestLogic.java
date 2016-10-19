@@ -18,7 +18,7 @@ class TestLogic extends WeChatLogic {
 
     @Override
     protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
-        return new TestLogic(sessionManager, ladderConfig, "use cache");
+        return new StartLogic(sessionManager, ladderConfig);
     }
 
 }
