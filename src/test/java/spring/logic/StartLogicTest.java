@@ -1,7 +1,6 @@
 package spring.logic;
 
 import org.junit.Test;
-import spring.config.MockLadderConfig;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
 
