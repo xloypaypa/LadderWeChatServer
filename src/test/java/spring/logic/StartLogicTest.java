@@ -17,7 +17,7 @@ public class StartLogicTest extends LogicTest {
     public void testTimeOut() throws Exception {
         sessionManager.createSession("id");
 
-        StartLogic startLogic = new StartLogic(sessionManager, new MockLadderConfig());
+        StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
         assertEquals(ExceptionLogic.class, weChatLogic.getClass());
         assertEquals("time out", weChatLogic.getReplyFromServer());

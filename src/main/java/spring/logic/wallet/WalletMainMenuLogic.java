@@ -26,6 +26,7 @@ public class WalletMainMenuLogic extends WeChatLogic {
     protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
         switch (message) {
             case "1":
+                loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 500);
                 LadderReply moneyList = askLadderServer(weChatId, ProtocolBuilder.getMoney(), 500);
                 JSONArray jsonArray = JSONArray.fromObject(new String(moneyList.getBody()));

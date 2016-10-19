@@ -22,17 +22,7 @@ public class StartLogic extends WeChatLogic {
 
     @Override
     protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
-        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
-        sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
-
-        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
-        String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
-
-        askLadderServer(weChatId,
-                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
-
-        LadderReply changeReply = askLadderServer(weChatId,
-                ProtocolBuilder.changeConnectionUserByWeChat(weChatId), 500);
+        LadderReply changeReply = loginAsUser(weChatId);
         String result = JSONObject.fromObject(new String(changeReply.getBody())).getString("result");
 
         switch (result) {

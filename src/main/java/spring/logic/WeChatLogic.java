@@ -1,7 +1,9 @@
 package spring.logic;
 
+import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
 import spring.service.session.SessionManager;
+import tools.ProtocolBuilder;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -51,6 +53,20 @@ public abstract class WeChatLogic {
 
     private void closeSession(String weChatId) {
         sessionManager.closeSession(weChatId);
+    }
+
+    protected LadderReply loginAsUser(String weChatId) throws Exception {
+        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
+        sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
+
+        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
+        String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
+
+        askLadderServer(weChatId,
+                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
+
+        return askLadderServer(weChatId,
+                ProtocolBuilder.changeConnectionUserByWeChat(weChatId), 500);
     }
 
     protected LadderReply askLadderServer(String weChatId, byte[] message, long timeOut) throws Exception {

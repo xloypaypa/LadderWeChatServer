@@ -33,6 +33,7 @@ public class LogicTest {
         mockLadderServerSolver.putReply(ProtocolBuilder.key(ladderConfig.getPublicKey()), "key#{\"result\":\"ok\"}".getBytes(), 100);
         mockLadderServerSolver.putReply(ProtocolBuilder.getSessionId(), ("/getSessionID#{\"result\":\"" + sessionId + "\"}").getBytes(), 100);
         mockLadderServerSolver.putReply(ProtocolBuilder.login("username", "password", "1234"), "/login#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.putReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"ok\"}".getBytes(), 100);
         return mockLadderServerSolver;
     }
 }
