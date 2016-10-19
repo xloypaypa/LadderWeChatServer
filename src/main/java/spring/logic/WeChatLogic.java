@@ -75,7 +75,7 @@ public abstract class WeChatLogic {
         return waitForReply(weChatId, timeOut);
     }
 
-    private LadderReply waitForReply(String weChatId, long timeOut) throws Exception {
+    protected LadderReply waitForReply(String weChatId, long timeOut) throws Exception {
         FutureTask<byte[]> futureTask = new FutureTask<>(() -> {
             byte[] bytes;
             while (true) {
