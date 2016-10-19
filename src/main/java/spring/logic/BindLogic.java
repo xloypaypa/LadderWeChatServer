@@ -21,7 +21,7 @@ class BindLogic extends WeChatLogic {
     }
 
     @Override
-    WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
         switch (message) {
             case "1":
                 return new AskUserNameLogic(this.sessionManager, this.ladderConfig, true);

@@ -21,7 +21,7 @@ public class StartLogic extends WeChatLogic {
     }
 
     @Override
-    WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
         askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 

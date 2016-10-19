@@ -1,6 +1,7 @@
 package spring.logic;
 
 import org.junit.Test;
+import spring.logic.wallet.WalletMainMenuLogic;
 
 import static org.junit.Assert.*;
 

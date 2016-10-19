@@ -15,17 +15,17 @@ import java.util.concurrent.TimeoutException;
  */
 public abstract class WeChatLogic {
 
-    SessionManager sessionManager;
-    LadderConfig ladderConfig;
+    protected SessionManager sessionManager;
+    protected LadderConfig ladderConfig;
 
-    WeChatLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
+    protected WeChatLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
         this.sessionManager = sessionManager;
         this.ladderConfig = ladderConfig;
     }
 
     public abstract String getReplyFromServer();
     
-    abstract WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception;
+    protected abstract WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception;
 
     public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
         try {
@@ -52,7 +52,7 @@ public abstract class WeChatLogic {
         sessionManager.closeSession(weChatId);
     }
 
-    LadderReply askLadderServer(String weChatId, byte[] message, long timeOut) throws Exception {
+    protected LadderReply askLadderServer(String weChatId, byte[] message, long timeOut) throws Exception {
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().addMessage(message);
 
         return waitForReply(weChatId, timeOut);
@@ -85,7 +85,7 @@ public abstract class WeChatLogic {
         }
     }
 
-    class LadderReply {
+    protected class LadderReply {
         private String command;
         private byte[] body;
 
@@ -101,11 +101,11 @@ public abstract class WeChatLogic {
             }
         }
 
-        String getCommand() {
+        public String getCommand() {
             return command;
         }
 
-        byte[] getBody() {
+        public byte[] getBody() {
             return body;
         }
     }

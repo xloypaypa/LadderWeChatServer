@@ -71,4 +71,9 @@ public class ProtocolBuilder {
         return ("/useApp#" + body).getBytes();
     }
 
+    //wallet part
+    public static byte[] getMoney() {
+        return "getMoney#{}".getBytes();
+    }
+
 }

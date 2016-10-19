@@ -14,9 +14,9 @@ import tools.ProtocolBuilder;
  */
 public class LogicTest {
 
-    LadderConfig ladderConfig;
+    protected LadderConfig ladderConfig;
 
-    SessionManager sessionManager;
+    protected SessionManager sessionManager;
 
     String sessionId = "1234";
 
@@ -26,7 +26,7 @@ public class LogicTest {
         sessionManager = new MockSessionManager((MockLadderConfig) ladderConfig);
     }
 
-    MockLadderServerSolver mockLoginAsWeChatProtocol(String id) throws Exception {
+    protected MockLadderServerSolver mockLoginAsWeChatProtocol(String id) throws Exception {
         sessionManager.createSession(id);
         MockLadderServerSolver mockLadderServerSolver = (MockLadderServerSolver) sessionManager.getSessionMessage("id")
                 .getLadderServerSolver();

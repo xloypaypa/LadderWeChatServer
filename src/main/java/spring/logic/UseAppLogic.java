@@ -1,6 +1,7 @@
 package spring.logic;
 
 import spring.config.LadderConfig;
+import spring.logic.wallet.WalletMainMenuLogic;
 import spring.service.session.SessionManager;
 
 /**
@@ -24,7 +25,7 @@ class UseAppLogic extends WeChatLogic {
     }
 
     @Override
-    WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
         try {
             int index = Integer.parseInt(message) - 1;
             if (index < 0 || index >= ladderConfig.getAvailableApp().length) {
