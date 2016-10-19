@@ -32,7 +32,7 @@ public class AppOrUnbindLogicTest extends LogicTest {
     @Test
     public void should_jump_to_start_logic_when_unbind_account() throws Exception {
         MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
-        mockLadderServerSolver.putReply(ProtocolBuilder.unbindUserAndWeChat("id"),
+        mockLadderServerSolver.addReply(ProtocolBuilder.unbindUserAndWeChat("id"),
                 "unbindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 50);
         AppOrUnbindLogic appOrUnbindLogic = new AppOrUnbindLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = appOrUnbindLogic.getReplyFromUser("id", "type", "2");

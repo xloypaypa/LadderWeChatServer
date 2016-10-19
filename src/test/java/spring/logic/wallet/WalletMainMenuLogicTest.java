@@ -44,9 +44,11 @@ public class WalletMainMenuLogicTest extends LogicTest {
         jsonArray.add(typeOne);
         jsonArray.add(typeTwo);
 
-        mockLadderServerSolver.putReply(ProtocolBuilder.useApp("wallet"),
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
                 "/useApp#{\"result\":\"ok\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.getMoney(),
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/loginApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.getMoney(),
                 ("getMoney#" + jsonArray.toString()).getBytes(), 100);
 
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);

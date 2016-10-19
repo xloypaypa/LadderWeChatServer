@@ -15,7 +15,7 @@ public class AskPasswordLogicTest extends LogicTest {
     @Test
     public void should_jump_to_app_or_unbind_logic_when_ask_password_for_bind() throws Exception {
         MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
-        mockLadderServerSolver.putReply(ProtocolBuilder.bindUserAndWeChat("wu", "wp", sessionId, "id"),
+        mockLadderServerSolver.addReply(ProtocolBuilder.bindUserAndWeChat("wu", "wp", sessionId, "id"),
                 "bindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 100);
 
         AskPasswordLogic askPasswordLogic = new AskPasswordLogic(sessionManager, ladderConfig, true, "wu");
@@ -26,7 +26,7 @@ public class AskPasswordLogicTest extends LogicTest {
     @Test
     public void should_jump_to_start_logic_when_ask_password_not_for_bind() throws Exception {
         MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
-        mockLadderServerSolver.putReply(ProtocolBuilder.register("wu", "wp"),
+        mockLadderServerSolver.addReply(ProtocolBuilder.register("wu", "wp"),
                 "bindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 100);
 
         AskPasswordLogic askPasswordLogic = new AskPasswordLogic(sessionManager, ladderConfig, false, "wu");

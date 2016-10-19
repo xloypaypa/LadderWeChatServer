@@ -28,10 +28,10 @@ public class StartLogicTest extends LogicTest {
         MockLadderServerSolver mockLadderServerSolver = (MockLadderServerSolver) sessionManager.getSessionMessage("id")
                 .getLadderServerSolver();
 
-        mockLadderServerSolver.putReply(ProtocolBuilder.key(ladderConfig.getPublicKey()), "key#{\"result\":\"ok\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.getSessionId(), "/getSessionID#{\"result\":\"1234\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.login("username", "password", "1234"), "/login#{\"result\":\"ok\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"fail\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.key(ladderConfig.getPublicKey()), "key#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.getSessionId(), "/getSessionID#{\"result\":\"1234\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.login("username", "password", "1234"), "/login#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"fail\"}".getBytes(), 100);
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
@@ -45,10 +45,10 @@ public class StartLogicTest extends LogicTest {
         MockLadderServerSolver mockLadderServerSolver = (MockLadderServerSolver) sessionManager.getSessionMessage("id")
                 .getLadderServerSolver();
 
-        mockLadderServerSolver.putReply(ProtocolBuilder.key(ladderConfig.getPublicKey()), "key#{\"result\":\"ok\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.getSessionId(), "/getSessionID#{\"result\":\"1234\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.login("username", "password", "1234"), "/login#{\"result\":\"ok\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"unbind account\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.key(ladderConfig.getPublicKey()), "key#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.getSessionId(), "/getSessionID#{\"result\":\"1234\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.login("username", "password", "1234"), "/login#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"unbind account\"}".getBytes(), 100);
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
@@ -61,10 +61,10 @@ public class StartLogicTest extends LogicTest {
         MockLadderServerSolver mockLadderServerSolver = (MockLadderServerSolver) sessionManager.getSessionMessage("id")
                 .getLadderServerSolver();
 
-        mockLadderServerSolver.putReply(ProtocolBuilder.key(ladderConfig.getPublicKey()), "key#{\"result\":\"ok\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.getSessionId(), "/getSessionID#{\"result\":\"1234\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.login("username", "password", "1234"), "/login#{\"result\":\"ok\"}".getBytes(), 100);
-        mockLadderServerSolver.putReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.key(ladderConfig.getPublicKey()), "key#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.getSessionId(), "/getSessionID#{\"result\":\"1234\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.login("username", "password", "1234"), "/login#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"ok\"}".getBytes(), 100);
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
