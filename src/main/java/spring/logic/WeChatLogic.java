@@ -38,6 +38,7 @@ public abstract class WeChatLogic {
         try {
             result = solveLadderLogic(weChatId, messageType, message);
         } catch (Exception e) {
+            e.printStackTrace();
             result = new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
         }
         closeSession(weChatId);
