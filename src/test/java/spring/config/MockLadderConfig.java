@@ -38,4 +38,9 @@ public class MockLadderConfig extends LadderConfig {
             return null;
         }
     }
+
+    @Override
+    public String[] getAvailableApp() {
+        return new String[]{"wallet"};
+    }
 }

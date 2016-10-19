@@ -39,6 +39,9 @@ public class LadderConfig {
     @Value("#{'${password}'}")
     private String password;
 
+    @Value("#{'${availableApp}'}")
+    private String[] availableApp;
+
     private PublicKey serverPublicKey = null, localPublicKey = null;
     private PrivateKey localPrivateKey = null;
 
@@ -75,6 +78,10 @@ public class LadderConfig {
 
     public String getPassword() {
         return password;
+    }
+
+    public String[] getAvailableApp() {
+        return availableApp;
     }
 
     private void initKey() {

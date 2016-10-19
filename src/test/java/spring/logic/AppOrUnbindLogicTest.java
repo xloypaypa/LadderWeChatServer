@@ -22,12 +22,11 @@ public class AppOrUnbindLogicTest extends LogicTest {
     }
 
     @Test
-    public void should_jump_to_test_logic_when_use_app() throws Exception {
+    public void should_jump_to_use_app_logic_when_use_app() throws Exception {
         mockLoginAsWeChatProtocol("id");
         AppOrUnbindLogic appOrUnbindLogic = new AppOrUnbindLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = appOrUnbindLogic.getReplyFromUser("id", "type", "1");
-        assertEquals(TestLogic.class, weChatLogic.getClass());
-        assertEquals("debug message: still in progress", weChatLogic.getReplyFromServer());
+        assertEquals(UseAppLogic.class, weChatLogic.getClass());
     }
 
     @Test

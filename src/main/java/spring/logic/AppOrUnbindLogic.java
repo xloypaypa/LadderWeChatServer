@@ -34,7 +34,7 @@ class AppOrUnbindLogic extends WeChatLogic {
 
         switch (message) {
             case "1":
-                return new TestLogic(this.sessionManager, this.ladderConfig, "still in progress");
+                return new UseAppLogic(this.sessionManager, this.ladderConfig);
             case "2":
                 askLadderServer(weChatId,
                         ProtocolBuilder.unbindUserAndWeChat(weChatId), 500);
