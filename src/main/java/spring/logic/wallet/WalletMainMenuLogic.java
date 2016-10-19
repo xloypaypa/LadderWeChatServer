@@ -27,8 +27,8 @@ public class WalletMainMenuLogic extends WeChatLogic {
         switch (message) {
             case "1":
                 loginAsUser(weChatId);
-                LadderReply use = askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
-                LadderReply loginApp = waitForReply(weChatId, 2000);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
+                waitForReply(weChatId, 2000);
                 LadderReply moneyList = askLadderServer(weChatId, ProtocolBuilder.getMoney(), 1000);
                 JSONArray jsonArray = JSONArray.fromObject(new String(moneyList.getBody()));
                 return new WalletGetMoneyListLogic(sessionManager, ladderConfig, jsonArray, this);
