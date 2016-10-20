@@ -21,7 +21,7 @@ class WalletUseMoneyResultLogic extends WeChatLogic {
 
     @Override
     public String getReplyFromServer() {
-        return "use money " + result;
+        return "use money " + result + "\n\n" + this.walletMainMenuLogic.getReplyFromServer();
     }
 
     @Override

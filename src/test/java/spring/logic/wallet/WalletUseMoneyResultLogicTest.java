@@ -5,6 +5,7 @@ import org.junit.Test;
 import spring.logic.LogicTest;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -27,7 +28,7 @@ public class WalletUseMoneyResultLogicTest extends LogicTest {
     public void should_show_result_and_main_menu() throws Exception {
         WalletUseMoneyResultLogic walletUseMoneyResultLogic =
                 new WalletUseMoneyResultLogic(sessionManager, ladderConfig, walletMainMenuLogic, "ok");
-        assertEquals("use money ok", walletUseMoneyResultLogic.getReplyFromServer());
+        assertTrue(walletUseMoneyResultLogic.getReplyFromServer().startsWith("use money ok\n\n"));
     }
 
     @Test
