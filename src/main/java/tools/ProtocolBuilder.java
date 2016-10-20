@@ -80,4 +80,8 @@ public class ProtocolBuilder {
         return "getBudget#{}".getBytes();
     }
 
+    public static byte[] rollBack() {
+        return "rollBack#{}".getBytes();
+    }
+
 }

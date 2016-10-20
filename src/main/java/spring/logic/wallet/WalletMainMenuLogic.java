@@ -1,6 +1,7 @@
 package spring.logic.wallet;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
 import spring.logic.ExceptionLogic;
 import spring.logic.StartLogic;
@@ -19,7 +20,7 @@ public class WalletMainMenuLogic extends WeChatLogic {
 
     @Override
     public String getReplyFromServer() {
-        return "input 1 to get money list; input 2 to get budget list; input 0 to exit app; ";
+        return "input 1 to get money list; input 2 to get budget list; input 9 to roll back last operation; input 0 to exit app; ";
     }
 
     @Override
@@ -39,6 +40,13 @@ public class WalletMainMenuLogic extends WeChatLogic {
                 LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget(), 1000);
                 JSONArray budgetArray = JSONArray.fromObject(new String(budgetList.getBody()));
                 return new WalletGetBudgetListLogic(sessionManager, ladderConfig, budgetArray, this);
+            case "9":
+                loginAsUser(weChatId);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
+                waitForReply(weChatId, 2000);
+                LadderReply rollBackReply = askLadderServer(weChatId, ProtocolBuilder.rollBack(), 1000);
+                JSONObject rollBackMessage = JSONObject.fromObject(new String(rollBackReply.getBody()));
+                return new WalletRollbackLogic(sessionManager, ladderConfig, rollBackMessage.getString("result"), this);
             case "0":
                 return new StartLogic(sessionManager, ladderConfig);
             default:

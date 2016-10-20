@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import spring.logic.LogicTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -38,11 +38,10 @@ public class WalletGetMoneyListLogicTest extends LogicTest {
         jsonArray.add(typeTwo);
 
         WalletGetMoneyListLogic walletGetMoneyListLogic = new WalletGetMoneyListLogic(sessionManager, ladderConfig, jsonArray, walletMainMenuLogic);
-        assertEquals("your money list is:\n" +
+        assertTrue(walletGetMoneyListLogic.getReplyFromServer().startsWith("your money list is:\n" +
                 "a => 1.00\n" +
                 "b => 2.00\n" +
-                "\n" +
-                "input 1 to get money list; input 2 to get budget list; input 0 to exit app; ", walletGetMoneyListLogic.getReplyFromServer());
+                "\n"));
     }
 
     @Test

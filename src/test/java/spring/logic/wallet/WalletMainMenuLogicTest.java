@@ -21,7 +21,7 @@ public class WalletMainMenuLogicTest extends LogicTest {
     @Test
     public void should_show_main_menu() throws Exception {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        assertEquals("input 1 to get money list; input 2 to get budget list; input 0 to exit app; ",
+        assertEquals("input 1 to get money list; input 2 to get budget list; input 9 to roll back last operation; input 0 to exit app; ",
                 walletMainMenuLogic.getReplyFromServer());
     }
 
@@ -80,6 +80,22 @@ public class WalletMainMenuLogicTest extends LogicTest {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "2");
         assertEquals(WalletGetBudgetListLogic.class, weChatLogic.getClass());
+    }
+
+    @Test
+    public void should_go_to_roll_back_logic_when_input_9() throws Exception {
+        MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
+
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/useApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/loginApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.rollBack(),
+                "rollBack#{\"result\":\"ok\"}".getBytes(), 100);
+
+        WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
+        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "9");
+        assertEquals(WalletRollbackLogic.class, weChatLogic.getClass());
     }
 
     @Test
