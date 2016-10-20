@@ -30,20 +30,30 @@ public abstract class WeChatLogic {
     protected abstract WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception;
 
     public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
-        try {
-            createSession(weChatId);
-        } catch (IOException e) {
-            return new ExceptionLogic(this.sessionManager, ladderConfig, "can't connect");
-        }
+        FutureTask<WeChatLogic> futureTask = new FutureTask<>(() -> {
+            try {
+                createSession(weChatId);
+            } catch (IOException e) {
+                return new ExceptionLogic(this.sessionManager, ladderConfig, "can't connect");
+            }
 
-        WeChatLogic result;
+            WeChatLogic result;
+            try {
+                result = solveLadderLogic(weChatId, messageType, message);
+            } catch (Exception e) {
+                result = new ExceptionLogic(this.sessionManager, ladderConfig, "exception: " + e.getMessage());
+            }
+            closeSession(weChatId);
+            return result;
+        });
+        Thread thread = new Thread(futureTask);
+        thread.start();
         try {
-            result = solveLadderLogic(weChatId, messageType, message);
-        } catch (Exception e) {
-            result = new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
+            return futureTask.get(4500, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            futureTask.cancel(true);
+            return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
         }
-        closeSession(weChatId);
-        return result;
     }
 
     private void createSession(String weChatId) throws IOException {
@@ -75,30 +85,19 @@ public abstract class WeChatLogic {
     }
 
     protected LadderReply waitForReply(String weChatId, long timeOut) throws Exception {
-        FutureTask<byte[]> futureTask = new FutureTask<>(() -> {
-            byte[] bytes;
-            while (true) {
-                bytes = sessionManager.getSessionMessage(weChatId).getMessages();
-                if (bytes != null) {
-                    break;
-                }
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    break;
-                }
+        byte[] bytes;
+        while (true) {
+            bytes = sessionManager.getSessionMessage(weChatId).getMessages();
+            if (bytes != null) {
+                break;
             }
-            return bytes;
-        });
-        Thread thread = new Thread(futureTask);
-        thread.start();
-
-        try {
-            return new LadderReply(futureTask.get(timeOut, TimeUnit.MILLISECONDS));
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            futureTask.cancel(true);
-            throw e;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                break;
+            }
         }
+        return new LadderReply(bytes);
     }
 
     protected class LadderReply {
