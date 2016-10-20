@@ -27,22 +27,22 @@ class AskPasswordLogic extends WeChatLogic {
 
     @Override
     public WeChatLogic solveLadderLogic(String weChatId, String messageType, String password) throws Exception {
-        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
+        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()));
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
-        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
+        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId());
         String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
 
         askLadderServer(weChatId,
-                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
+                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId));
 
         if (forBind) {
             askLadderServer(weChatId,
-                    ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId), 500);
+                    ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId));
             return new AppOrUnbindLogic(this.sessionManager, this.ladderConfig);
         } else {
             askLadderServer(weChatId,
-                    ProtocolBuilder.register(username, password), 500);
+                    ProtocolBuilder.register(username, password));
             return new StartLogic(this.sessionManager, this.ladderConfig);
         }
     }

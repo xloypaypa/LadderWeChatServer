@@ -23,21 +23,21 @@ class AppOrUnbindLogic extends WeChatLogic {
 
     @Override
     protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
-        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
+        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()));
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
-        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
+        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId());
         String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
 
         askLadderServer(weChatId,
-                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
+                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId));
 
         switch (message) {
             case "1":
                 return new UseAppLogic(this.sessionManager, this.ladderConfig);
             case "2":
                 askLadderServer(weChatId,
-                        ProtocolBuilder.unbindUserAndWeChat(weChatId), 500);
+                        ProtocolBuilder.unbindUserAndWeChat(weChatId));
                 return new StartLogic(this.sessionManager, this.ladderConfig);
             default:
                 return new ExceptionLogic(this.sessionManager, ladderConfig, "invalidate input");

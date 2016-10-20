@@ -39,9 +39,9 @@ class WalletAskMoneyTypeLogic extends WeChatLogic {
                 return new ExceptionLogic(sessionManager, ladderConfig, "invalid type");
             } else {
                 loginAsUser(weChatId);
-                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
-                waitForReply(weChatId, 2000);
-                LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget(), 1000);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
+                waitForReply(weChatId);
+                LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget());
                 JSONArray budgetArray = JSONArray.fromObject(new String(budgetList.getBody()));
 
                 return new WalletAskBudgetTypeLogic(sessionManager, ladderConfig, budgetArray, moneyTypes.getJSONObject(index).getString("typename"));

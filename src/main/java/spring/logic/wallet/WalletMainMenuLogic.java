@@ -32,30 +32,30 @@ public class WalletMainMenuLogic extends WeChatLogic {
         switch (message) {
             case "1":
                 loginAsUser(weChatId);
-                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
-                waitForReply(weChatId, 2000);
-                LadderReply moneyList = askLadderServer(weChatId, ProtocolBuilder.getMoney(), 1000);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
+                waitForReply(weChatId);
+                LadderReply moneyList = askLadderServer(weChatId, ProtocolBuilder.getMoney());
                 JSONArray moneyArray = JSONArray.fromObject(new String(moneyList.getBody()));
                 return new WalletGetMoneyListLogic(sessionManager, ladderConfig, moneyArray, this);
             case "2":
                 loginAsUser(weChatId);
-                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
-                waitForReply(weChatId, 2000);
-                LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget(), 1000);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
+                waitForReply(weChatId);
+                LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget());
                 JSONArray budgetArray = JSONArray.fromObject(new String(budgetList.getBody()));
                 return new WalletGetBudgetListLogic(sessionManager, ladderConfig, budgetArray, this);
             case "3":
                 loginAsUser(weChatId);
-                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
-                waitForReply(weChatId, 2000);
-                LadderReply moneyListForUse = askLadderServer(weChatId, ProtocolBuilder.getMoney(), 1000);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
+                waitForReply(weChatId);
+                LadderReply moneyListForUse = askLadderServer(weChatId, ProtocolBuilder.getMoney());
                 JSONArray moneyArrayForUse = JSONArray.fromObject(new String(moneyListForUse.getBody()));
                 return new WalletAskMoneyTypeLogic(sessionManager, ladderConfig, moneyArrayForUse);
             case "9":
                 loginAsUser(weChatId);
-                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
-                waitForReply(weChatId, 2000);
-                LadderReply rollBackReply = askLadderServer(weChatId, ProtocolBuilder.rollBack(), 1000);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
+                waitForReply(weChatId);
+                LadderReply rollBackReply = askLadderServer(weChatId, ProtocolBuilder.rollBack());
                 JSONObject rollBackMessage = JSONObject.fromObject(new String(rollBackReply.getBody()));
                 return new WalletRollbackLogic(sessionManager, ladderConfig, rollBackMessage.getString("result"), this);
             case "0":

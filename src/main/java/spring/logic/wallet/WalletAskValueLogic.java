@@ -31,9 +31,9 @@ class WalletAskValueLogic extends WeChatLogic {
         try {
             double value = Double.parseDouble(message);
             loginAsUser(weChatId);
-            askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
-            waitForReply(weChatId, 2000);
-            LadderReply useReply = askLadderServer(weChatId, ProtocolBuilder.useMoney(moneyType, budgetType, value), 1000);
+            askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
+            waitForReply(weChatId);
+            LadderReply useReply = askLadderServer(weChatId, ProtocolBuilder.useMoney(moneyType, budgetType, value));
             JSONObject useMessage = JSONObject.fromObject(new String(useReply.getBody()));
             return new WalletUseMoneyResultLogic(sessionManager, ladderConfig,
                     new WalletMainMenuLogic(sessionManager, ladderConfig), useMessage.getString("result"));

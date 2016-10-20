@@ -65,26 +65,26 @@ public abstract class WeChatLogic {
     }
 
     protected LadderReply loginAsUser(String weChatId) throws Exception {
-        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()), 500);
+        askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()));
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
-        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId(), 500);
+        LadderReply sessionReply = askLadderServer(weChatId, ProtocolBuilder.getSessionId());
         String sessionId = JSONObject.fromObject(new String(sessionReply.getBody())).getString("result");
 
         askLadderServer(weChatId,
-                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId), 500);
+                ProtocolBuilder.login(ladderConfig.getUsername(), ladderConfig.getPassword(), sessionId));
 
         return askLadderServer(weChatId,
-                ProtocolBuilder.changeConnectionUserByWeChat(weChatId), 500);
+                ProtocolBuilder.changeConnectionUserByWeChat(weChatId));
     }
 
-    protected LadderReply askLadderServer(String weChatId, byte[] message, long timeOut) throws Exception {
+    protected LadderReply askLadderServer(String weChatId, byte[] message) throws Exception {
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().addMessage(message);
 
-        return waitForReply(weChatId, timeOut);
+        return waitForReply(weChatId);
     }
 
-    protected LadderReply waitForReply(String weChatId, long timeOut) throws Exception {
+    protected LadderReply waitForReply(String weChatId) throws Exception {
         byte[] bytes;
         while (true) {
             bytes = sessionManager.getSessionMessage(weChatId).getMessages();
