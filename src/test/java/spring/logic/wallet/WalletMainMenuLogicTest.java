@@ -21,7 +21,8 @@ public class WalletMainMenuLogicTest extends LogicTest {
     @Test
     public void should_show_main_menu() throws Exception {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        assertEquals("input 1 to get money list; input 0 to exit app; ", walletMainMenuLogic.getReplyFromServer());
+        assertEquals("input 1 to get money list; input 2 to get budget list; input 0 to exit app; ",
+                walletMainMenuLogic.getReplyFromServer());
     }
 
     @Test
@@ -54,6 +55,31 @@ public class WalletMainMenuLogicTest extends LogicTest {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "1");
         assertEquals(WalletGetMoneyListLogic.class, weChatLogic.getClass());
+    }
+
+    @Test
+    public void should_go_to_show_budget_list_logic_when_input_2() throws Exception {
+        MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
+        JSONArray jsonArray = new JSONArray();
+        JSONObject typeOne = new JSONObject();
+        typeOne.put("typename", "a");
+        typeOne.put("value", 1);
+        JSONObject typeTwo = new JSONObject();
+        typeTwo.put("typename", "b");
+        typeTwo.put("value", 2);
+        jsonArray.add(typeOne);
+        jsonArray.add(typeTwo);
+
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/useApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/loginApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.getBudget(),
+                ("getBudget#" + jsonArray.toString()).getBytes(), 100);
+
+        WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
+        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "2");
+        assertEquals(WalletGetBudgetListLogic.class, weChatLogic.getClass());
     }
 
     @Test

@@ -12,12 +12,12 @@ import java.text.DecimalFormat;
  * Created by xsu on 2016/10/19.
  * it's the logic for get money list in wallet
  */
-class WalletGetMoneyListLogic extends WeChatLogic {
+class WalletGetBudgetListLogic extends WeChatLogic {
 
     private JSONArray jsonArray;
     private WalletMainMenuLogic walletMainMenuLogic;
 
-    WalletGetMoneyListLogic(SessionManager sessionManager, LadderConfig ladderConfig, JSONArray jsonArray, WalletMainMenuLogic walletMainMenuLogic) {
+    WalletGetBudgetListLogic(SessionManager sessionManager, LadderConfig ladderConfig, JSONArray jsonArray, WalletMainMenuLogic walletMainMenuLogic) {
         super(sessionManager, ladderConfig);
         this.jsonArray = jsonArray;
         this.walletMainMenuLogic = walletMainMenuLogic;
@@ -26,7 +26,7 @@ class WalletGetMoneyListLogic extends WeChatLogic {
     @Override
     public String getReplyFromServer() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
-        String result = "your money list is:\n";
+        String result = "your budget list is:\n";
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject now = jsonArray.getJSONObject(i);
             result += now.getString("typename") + " => " + decimalFormat.format(now.getDouble("value")) + "\n";

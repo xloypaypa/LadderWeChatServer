@@ -19,7 +19,7 @@ public class WalletMainMenuLogic extends WeChatLogic {
 
     @Override
     public String getReplyFromServer() {
-        return "input 1 to get money list; input 0 to exit app; ";
+        return "input 1 to get money list; input 2 to get budget list; input 0 to exit app; ";
     }
 
     @Override
@@ -30,8 +30,15 @@ public class WalletMainMenuLogic extends WeChatLogic {
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
                 waitForReply(weChatId, 2000);
                 LadderReply moneyList = askLadderServer(weChatId, ProtocolBuilder.getMoney(), 1000);
-                JSONArray jsonArray = JSONArray.fromObject(new String(moneyList.getBody()));
-                return new WalletGetMoneyListLogic(sessionManager, ladderConfig, jsonArray, this);
+                JSONArray moneyArray = JSONArray.fromObject(new String(moneyList.getBody()));
+                return new WalletGetMoneyListLogic(sessionManager, ladderConfig, moneyArray, this);
+            case "2":
+                loginAsUser(weChatId);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
+                waitForReply(weChatId, 2000);
+                LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget(), 1000);
+                JSONArray budgetArray = JSONArray.fromObject(new String(budgetList.getBody()));
+                return new WalletGetBudgetListLogic(sessionManager, ladderConfig, budgetArray, this);
             case "0":
                 return new StartLogic(sessionManager, ladderConfig);
             default:

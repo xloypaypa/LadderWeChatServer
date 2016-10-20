@@ -76,4 +76,8 @@ public class ProtocolBuilder {
         return "getMoney#{}".getBytes();
     }
 
+    public static byte[] getBudget() {
+        return "getBudget#{}".getBytes();
+    }
+
 }

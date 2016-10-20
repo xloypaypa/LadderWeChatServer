@@ -6,15 +6,15 @@ import org.junit.Before;
 import org.junit.Test;
 import spring.logic.LogicTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
- * Created by xsu on 2016/10/19.
+ * Created by xsu on 2016/10/20.
  * it's the testing code for show wallet money list
  */
-public class WalletGetMoneyListLogicTest extends LogicTest {
+public class WalletGetBudgetListLogicTest extends LogicTest {
 
     private WalletMainMenuLogic walletMainMenuLogic;
 
@@ -37,20 +37,21 @@ public class WalletGetMoneyListLogicTest extends LogicTest {
         jsonArray.add(typeOne);
         jsonArray.add(typeTwo);
 
-        WalletGetMoneyListLogic walletGetMoneyListLogic = new WalletGetMoneyListLogic(sessionManager, ladderConfig, jsonArray, walletMainMenuLogic);
-        assertEquals("your money list is:\n" +
+        WalletGetBudgetListLogic walletGetBudgetListLogic = new WalletGetBudgetListLogic(sessionManager, ladderConfig, jsonArray, walletMainMenuLogic);
+        assertEquals("your budget list is:\n" +
                 "a => 1.00\n" +
                 "b => 2.00\n" +
                 "\n" +
-                "input 1 to get money list; input 2 to get budget list; input 0 to exit app; ", walletGetMoneyListLogic.getReplyFromServer());
+                "input 1 to get money list; input 2 to get budget list; input 0 to exit app; ", walletGetBudgetListLogic.getReplyFromServer());
     }
 
     @Test
     public void should_use_main_menu_logic_when_get_message() throws Exception {
-        WalletGetMoneyListLogic walletGetMoneyListLogic = new WalletGetMoneyListLogic(sessionManager, ladderConfig, null, walletMainMenuLogic);
+        WalletGetBudgetListLogic walletGetBudgetListLogic = new WalletGetBudgetListLogic(sessionManager, ladderConfig, null, walletMainMenuLogic);
 
-        walletGetMoneyListLogic.solveLadderLogic("id", "type", "message");
+        walletGetBudgetListLogic.solveLadderLogic("id", "type", "message");
 
         verify(walletMainMenuLogic).solveLadderLogic("id", "type", "message");
     }
+
 }
