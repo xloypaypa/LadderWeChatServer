@@ -20,7 +20,11 @@ public class WalletMainMenuLogic extends WeChatLogic {
 
     @Override
     public String getReplyFromServer() {
-        return "input 1 to get money list; input 2 to get budget list; input 9 to roll back last operation; input 0 to exit app; ";
+        return "input 1 to get money list;\n" +
+                "input 2 to get budget list;\n" +
+                "input 3 to use money;\n" +
+                "input 9 to roll back last operation;\n" +
+                "input 0 to exit app;";
     }
 
     @Override
@@ -40,6 +44,13 @@ public class WalletMainMenuLogic extends WeChatLogic {
                 LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget(), 1000);
                 JSONArray budgetArray = JSONArray.fromObject(new String(budgetList.getBody()));
                 return new WalletGetBudgetListLogic(sessionManager, ladderConfig, budgetArray, this);
+            case "3":
+                loginAsUser(weChatId);
+                askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);
+                waitForReply(weChatId, 2000);
+                LadderReply moneyListForUse = askLadderServer(weChatId, ProtocolBuilder.getMoney(), 1000);
+                JSONArray moneyArrayForUse = JSONArray.fromObject(new String(moneyListForUse.getBody()));
+                return new WalletAskMoneyTypeLogic(sessionManager, ladderConfig, moneyArrayForUse);
             case "9":
                 loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"), 1000);

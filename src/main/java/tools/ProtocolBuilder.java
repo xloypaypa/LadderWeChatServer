@@ -84,4 +84,13 @@ public class ProtocolBuilder {
         return "rollBack#{}".getBytes();
     }
 
+    public static byte[] useMoney(String typename, String budgetType, double value) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("typename", typename);
+        jsonObject.put("value", value);
+        jsonObject.put("budgetType", budgetType);
+        String body = jsonObject.toString();
+        return ("useMoney#" + body).getBytes();
+    }
+
 }

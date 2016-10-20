@@ -21,7 +21,11 @@ public class WalletMainMenuLogicTest extends LogicTest {
     @Test
     public void should_show_main_menu() throws Exception {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        assertEquals("input 1 to get money list; input 2 to get budget list; input 9 to roll back last operation; input 0 to exit app; ",
+        assertEquals("input 1 to get money list;\n" +
+                        "input 2 to get budget list;\n" +
+                        "input 3 to use money;\n" +
+                        "input 9 to roll back last operation;\n" +
+                        "input 0 to exit app;",
                 walletMainMenuLogic.getReplyFromServer());
     }
 
@@ -80,6 +84,31 @@ public class WalletMainMenuLogicTest extends LogicTest {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "2");
         assertEquals(WalletGetBudgetListLogic.class, weChatLogic.getClass());
+    }
+
+    @Test
+    public void should_go_to_ask_money_type_logic_when_input_3() throws Exception {
+        MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
+        JSONArray jsonArray = new JSONArray();
+        JSONObject typeOne = new JSONObject();
+        typeOne.put("typename", "a");
+        typeOne.put("value", 1);
+        JSONObject typeTwo = new JSONObject();
+        typeTwo.put("typename", "b");
+        typeTwo.put("value", 2);
+        jsonArray.add(typeOne);
+        jsonArray.add(typeTwo);
+
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/useApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/loginApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.getMoney(),
+                ("getMoney#" + jsonArray.toString()).getBytes(), 100);
+
+        WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
+        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "3");
+        assertEquals(WalletAskMoneyTypeLogic.class, weChatLogic.getClass());
     }
 
     @Test
