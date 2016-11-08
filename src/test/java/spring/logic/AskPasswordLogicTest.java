@@ -28,6 +28,8 @@ public class AskPasswordLogicTest extends LogicTest {
         MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
         mockLadderServerSolver.addReply(ProtocolBuilder.register("wu", "wp"),
                 "bindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.bindUserAndWeChat("wu", "wp", sessionId, "id"),
+                "bindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 100);
 
         AskPasswordLogic askPasswordLogic = new AskPasswordLogic(sessionManager, ladderConfig, false, "wu");
         WeChatLogic weChatLogic = askPasswordLogic.getReplyFromUser("id", "type", "wp");

@@ -43,6 +43,8 @@ class AskPasswordLogic extends WeChatLogic {
         } else {
             askLadderServer(weChatId,
                     ProtocolBuilder.register(username, password));
+            askLadderServer(weChatId,
+                    ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId));
             return new StartLogic(this.sessionManager, this.ladderConfig);
         }
     }
