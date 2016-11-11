@@ -18,8 +18,8 @@ public class LadderMessageService {
 
     public String handleMessage(String weChatId, String messageType, String message) {
         UserStatus userStatus = cacheService.getUserStatus(weChatId);
-        WeChatLogic nextLogic = userStatus.getCurrentLogic().getReplyFromUser(weChatId, messageType, message);
-        userStatus.updateCurrentLogic(nextLogic);
+        WeChatLogic nextLogic = userStatus.getNextLogic().getReplyFromUser(weChatId, messageType, message);
+        userStatus.addNewLogic(nextLogic);
         cacheService.updateUserStatus(weChatId, userStatus);
 
         return nextLogic.getReplyFromServer();
