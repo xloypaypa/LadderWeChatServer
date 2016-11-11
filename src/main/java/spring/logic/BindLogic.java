@@ -28,7 +28,7 @@ class BindLogic extends WeChatLogic {
             case "2":
                 return new AskUserNameLogic(this.sessionManager, this.ladderConfig, false);
             default:
-                return new ExceptionLogic(this.sessionManager, this.ladderConfig, "invalidate input");
+                return new StartLogic(this.sessionManager, this.ladderConfig, "invalidate input");
         }
     }
 

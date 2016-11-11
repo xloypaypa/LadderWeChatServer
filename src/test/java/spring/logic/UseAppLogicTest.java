@@ -28,7 +28,7 @@ public class UseAppLogicTest extends LogicTest {
     public void should_go_to_exception_logic_when_input_invalidate_message() throws Exception {
         UseAppLogic useAppLogic = new UseAppLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = useAppLogic.getReplyFromUser("id", "type", "2");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("no such application", weChatLogic.getReplyFromServer());
     }
 }

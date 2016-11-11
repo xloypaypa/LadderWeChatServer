@@ -17,7 +17,7 @@ public class AppOrUnbindLogicTest extends LogicTest {
         mockLoginAsWeChatProtocol("id");
         AppOrUnbindLogic appOrUnbindLogic = new AppOrUnbindLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = appOrUnbindLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("invalidate input", weChatLogic.getReplyFromServer());
     }
 

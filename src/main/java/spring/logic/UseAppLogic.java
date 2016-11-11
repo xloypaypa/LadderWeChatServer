@@ -29,12 +29,12 @@ class UseAppLogic extends WeChatLogic {
         try {
             int index = Integer.parseInt(message) - 1;
             if (index < 0 || index >= ladderConfig.getAvailableApp().length) {
-                return new ExceptionLogic(sessionManager, ladderConfig, "no such application");
+                return new StartLogic(sessionManager, ladderConfig, "no such application");
             } else {
                 return new WalletMainMenuLogic(sessionManager, ladderConfig);
             }
         } catch (NumberFormatException e) {
-            return new ExceptionLogic(sessionManager, ladderConfig, "no such application");
+            return new StartLogic(sessionManager, ladderConfig, "no such application");
         }
     }
 }

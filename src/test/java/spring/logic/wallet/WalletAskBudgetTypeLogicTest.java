@@ -3,8 +3,8 @@ package spring.logic.wallet;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
-import spring.logic.ExceptionLogic;
 import spring.logic.LogicTest;
+import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
 
 import static org.junit.Assert.*;
@@ -64,7 +64,7 @@ public class WalletAskBudgetTypeLogicTest extends LogicTest {
 
         WalletAskBudgetTypeLogic walletAskBudgetTypeLogic = new WalletAskBudgetTypeLogic(sessionManager, ladderConfig, jsonArray, "");
         WeChatLogic weChatLogic = walletAskBudgetTypeLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("invalid type", weChatLogic.getReplyFromServer());
     }
 

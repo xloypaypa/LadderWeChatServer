@@ -11,13 +11,25 @@ import tools.ProtocolBuilder;
  */
 public class StartLogic extends WeChatLogic {
 
+    private String message;
+
     public StartLogic(SessionManager sessionManager, LadderConfig ladderConfig) {
         super(sessionManager, ladderConfig);
+        this.message = null;
+    }
+
+    public StartLogic(SessionManager sessionManager, LadderConfig ladderConfig, String message) {
+        super(sessionManager, ladderConfig);
+        this.message = message;
     }
 
     @Override
     public String getReplyFromServer() {
-        return "back to start logic";
+        if (this.message != null) {
+            return this.message;
+        } else {
+            return "back to start logic";
+        }
     }
 
     @Override
@@ -27,7 +39,7 @@ public class StartLogic extends WeChatLogic {
 
         switch (result) {
             case "fail":
-                return new ExceptionLogic(this.sessionManager, ladderConfig, "server error");
+                return new StartLogic(this.sessionManager, ladderConfig, "server error");
             case "unbind account":
                 return new BindLogic(this.sessionManager, this.ladderConfig);
             case "ok":

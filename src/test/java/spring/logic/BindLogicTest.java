@@ -14,7 +14,7 @@ public class BindLogicTest extends LogicTest {
     public void should_jump_to_exception_logic_when_got_invalidated_input() throws Exception {
         BindLogic bindLogic = new BindLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = bindLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("invalidate input", weChatLogic.getReplyFromServer());
     }
 

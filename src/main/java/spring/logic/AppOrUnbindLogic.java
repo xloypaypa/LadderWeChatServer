@@ -40,7 +40,7 @@ class AppOrUnbindLogic extends WeChatLogic {
                         ProtocolBuilder.unbindUserAndWeChat(weChatId));
                 return new StartLogic(this.sessionManager, this.ladderConfig);
             default:
-                return new ExceptionLogic(this.sessionManager, ladderConfig, "invalidate input");
+                return new StartLogic(this.sessionManager, ladderConfig, "invalidate input");
         }
     }
 

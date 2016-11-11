@@ -2,7 +2,7 @@ package spring.logic.wallet;
 
 import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
-import spring.logic.ExceptionLogic;
+import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
@@ -38,7 +38,7 @@ class WalletAskValueLogic extends WeChatLogic {
             return new WalletUseMoneyResultLogic(sessionManager, ladderConfig,
                     new WalletMainMenuLogic(sessionManager, ladderConfig), useMessage.getString("result"));
         } catch (NumberFormatException e) {
-            return new ExceptionLogic(sessionManager, ladderConfig, "Value should be a number.");
+            return new StartLogic(sessionManager, ladderConfig, "Value should be a number.");
         }
     }
 }

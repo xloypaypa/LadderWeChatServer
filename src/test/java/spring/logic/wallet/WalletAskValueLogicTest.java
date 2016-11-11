@@ -2,8 +2,8 @@ package spring.logic.wallet;
 
 import org.junit.Before;
 import org.junit.Test;
-import spring.logic.ExceptionLogic;
 import spring.logic.LogicTest;
+import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
@@ -46,7 +46,7 @@ public class WalletAskValueLogicTest extends LogicTest {
     public void should_jump_to_exception_logic_if_input_not_double() throws Exception {
         WalletAskValueLogic walletAskValueLogic = new WalletAskValueLogic(sessionManager, ladderConfig, "", "");
         WeChatLogic weChatLogic = walletAskValueLogic.getReplyFromUser("id", "type", "12.a");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("Value should be a number.", weChatLogic.getReplyFromServer());
     }
 

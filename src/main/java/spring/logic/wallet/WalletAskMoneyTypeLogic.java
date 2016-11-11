@@ -3,7 +3,7 @@ package spring.logic.wallet;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
-import spring.logic.ExceptionLogic;
+import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
@@ -36,7 +36,7 @@ class WalletAskMoneyTypeLogic extends WeChatLogic {
         try {
             int index = Integer.parseInt(message) - 1;
             if (index < 0 || index >= moneyTypes.size()) {
-                return new ExceptionLogic(sessionManager, ladderConfig, "invalid type");
+                return new StartLogic(sessionManager, ladderConfig, "invalid type");
             } else {
                 loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
@@ -47,7 +47,7 @@ class WalletAskMoneyTypeLogic extends WeChatLogic {
                 return new WalletAskBudgetTypeLogic(sessionManager, ladderConfig, budgetArray, moneyTypes.getJSONObject(index).getString("typename"));
             }
         } catch (NumberFormatException e) {
-            return new ExceptionLogic(sessionManager, ladderConfig, "invalid type");
+            return new StartLogic(sessionManager, ladderConfig, "invalid type");
         }
     }
 }

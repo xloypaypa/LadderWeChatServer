@@ -3,7 +3,6 @@ package spring.logic.wallet;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
-import spring.logic.ExceptionLogic;
 import spring.logic.LogicTest;
 import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
@@ -131,7 +130,7 @@ public class WalletMainMenuLogicTest extends LogicTest {
     public void should_go_to_exception_logic_when_invalidate_message() throws Exception {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "-1");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("invalid command", weChatLogic.getReplyFromServer());
     }
 }

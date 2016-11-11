@@ -4,8 +4,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import spring.logic.ExceptionLogic;
 import spring.logic.LogicTest;
+import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
@@ -63,7 +63,7 @@ public class WalletAskMoneyTypeLogicTest extends LogicTest {
     public void should_jump_to_exception_logic_if_selected_a_invalidate_money_type() throws Exception {
         WalletAskMoneyTypeLogic walletAskMoneyTypeLogic = new WalletAskMoneyTypeLogic(sessionManager, ladderConfig, jsonArray);
         WeChatLogic weChatLogic = walletAskMoneyTypeLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("invalid type", weChatLogic.getReplyFromServer());
     }
 

@@ -34,14 +34,14 @@ public abstract class WeChatLogic {
             try {
                 createSession(weChatId);
             } catch (IOException e) {
-                return new ExceptionLogic(this.sessionManager, ladderConfig, "can't connect");
+                return new StartLogic(this.sessionManager, ladderConfig, "can't connect");
             }
 
             WeChatLogic result;
             try {
                 result = solveLadderLogic(weChatId, messageType, message);
             } catch (Exception e) {
-                result = new ExceptionLogic(this.sessionManager, ladderConfig, "exception: " + e.getMessage());
+                result = new StartLogic(this.sessionManager, ladderConfig, "exception: " + e.getMessage());
             }
             closeSession(weChatId);
             return result;
@@ -52,7 +52,7 @@ public abstract class WeChatLogic {
             return futureTask.get(4500, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             futureTask.cancel(true);
-            return new ExceptionLogic(this.sessionManager, ladderConfig, "time out");
+            return new StartLogic(this.sessionManager, ladderConfig, "time out");
         }
     }
 

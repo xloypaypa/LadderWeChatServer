@@ -18,8 +18,14 @@ public class StartLogicTest extends LogicTest {
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("time out", weChatLogic.getReplyFromServer());
+    }
+
+    @Test
+    public void can_send_custom_message() throws Exception {
+        StartLogic startLogic = new StartLogic(sessionManager, ladderConfig, "test message");
+        assertEquals("test message", startLogic.getReplyFromServer());
     }
 
     @Test
@@ -35,7 +41,7 @@ public class StartLogicTest extends LogicTest {
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
         WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
-        assertEquals(ExceptionLogic.class, weChatLogic.getClass());
+        assertEquals(StartLogic.class, weChatLogic.getClass());
         assertEquals("server error", weChatLogic.getReplyFromServer());
     }
 

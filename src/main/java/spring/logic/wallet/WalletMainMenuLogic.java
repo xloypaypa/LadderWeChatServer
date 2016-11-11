@@ -3,7 +3,6 @@ package spring.logic.wallet;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
-import spring.logic.ExceptionLogic;
 import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
 import spring.service.session.SessionManager;
@@ -61,7 +60,7 @@ public class WalletMainMenuLogic extends WeChatLogic {
             case "0":
                 return new StartLogic(sessionManager, ladderConfig);
             default:
-                return new ExceptionLogic(sessionManager, ladderConfig, "invalid command");
+                return new StartLogic(sessionManager, ladderConfig, "invalid command");
         }
     }
 }
