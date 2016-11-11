@@ -4,10 +4,12 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.junit.Test;
 import spring.logic.LogicTest;
-import spring.logic.StartLogic;
-import spring.logic.WeChatLogic;
+import tools.StartLogicMatcher;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 2016/10/20.
@@ -46,8 +48,8 @@ public class WalletAskBudgetTypeLogicTest extends LogicTest {
         jsonArray.add(typeTwo);
 
         WalletAskBudgetTypeLogic walletAskBudgetTypeLogic = new WalletAskBudgetTypeLogic(sessionManager, ladderConfig, jsonArray, "");
-        WeChatLogic weChatLogic = walletAskBudgetTypeLogic.getReplyFromUser("id", "type", "1");
-        assertEquals(WalletAskValueLogic.class, weChatLogic.getClass());
+        walletAskBudgetTypeLogic.getReplyFromUser(userStatus, "id", "type", "1");
+        verify(userStatus).addNewLogic(any(WalletAskValueLogic.class));
     }
 
     @Test
@@ -63,9 +65,8 @@ public class WalletAskBudgetTypeLogicTest extends LogicTest {
         jsonArray.add(typeTwo);
 
         WalletAskBudgetTypeLogic walletAskBudgetTypeLogic = new WalletAskBudgetTypeLogic(sessionManager, ladderConfig, jsonArray, "");
-        WeChatLogic weChatLogic = walletAskBudgetTypeLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
-        assertEquals("invalid type", weChatLogic.getReplyFromServer());
+        walletAskBudgetTypeLogic.getReplyFromUser(userStatus, "id", "type", "3");
+        verify(userStatus).addNewLogic(argThat(new StartLogicMatcher("invalid type")));
     }
 
 }

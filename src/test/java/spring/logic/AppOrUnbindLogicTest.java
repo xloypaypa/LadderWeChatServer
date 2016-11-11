@@ -3,8 +3,11 @@ package spring.logic;
 import org.junit.Test;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
+import tools.StartLogicMatcher;
 
-import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 16/10/17.
@@ -16,17 +19,16 @@ public class AppOrUnbindLogicTest extends LogicTest {
     public void should_jump_to_exception_logic_when_got_invalidated_input() throws Exception {
         mockLoginAsWeChatProtocol("id");
         AppOrUnbindLogic appOrUnbindLogic = new AppOrUnbindLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = appOrUnbindLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
-        assertEquals("invalidate input", weChatLogic.getReplyFromServer());
+        appOrUnbindLogic.getReplyFromUser(userStatus, "id", "type", "3");
+        verify(userStatus).addNewLogic(argThat(new StartLogicMatcher("invalidate input")));
     }
 
     @Test
     public void should_jump_to_use_app_logic_when_use_app() throws Exception {
         mockLoginAsWeChatProtocol("id");
         AppOrUnbindLogic appOrUnbindLogic = new AppOrUnbindLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = appOrUnbindLogic.getReplyFromUser("id", "type", "1");
-        assertEquals(UseAppLogic.class, weChatLogic.getClass());
+        appOrUnbindLogic.getReplyFromUser(userStatus, "id", "type", "1");
+        verify(userStatus).addNewLogic(any(UseAppLogic.class));
     }
 
     @Test
@@ -35,7 +37,7 @@ public class AppOrUnbindLogicTest extends LogicTest {
         mockLadderServerSolver.addReply(ProtocolBuilder.unbindUserAndWeChat("id"),
                 "unbindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 50);
         AppOrUnbindLogic appOrUnbindLogic = new AppOrUnbindLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = appOrUnbindLogic.getReplyFromUser("id", "type", "2");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
+        appOrUnbindLogic.getReplyFromUser(userStatus, "id", "type", "2");
+        verify(userStatus).addNewLogic(any(StartLogic.class));
     }
 }

@@ -3,12 +3,14 @@ package spring.logic.wallet;
 import org.junit.Before;
 import org.junit.Test;
 import spring.logic.LogicTest;
-import spring.logic.StartLogic;
-import spring.logic.WeChatLogic;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
+import tools.StartLogicMatcher;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 2016/10/20.
@@ -38,16 +40,15 @@ public class WalletAskValueLogicTest extends LogicTest {
     @Test
     public void should_jump_to_use_money_result_logic_if_input_a_double() throws Exception {
         WalletAskValueLogic walletAskValueLogic = new WalletAskValueLogic(sessionManager, ladderConfig, "money", "budget");
-        WeChatLogic weChatLogic = walletAskValueLogic.getReplyFromUser("id", "type", "12.3");
-        assertEquals(WalletUseMoneyResultLogic.class, weChatLogic.getClass());
+        walletAskValueLogic.getReplyFromUser(userStatus, "id", "type", "12.3");
+        verify(userStatus).addNewLogic(any(WalletMainMenuLogic.class));
     }
 
     @Test
     public void should_jump_to_exception_logic_if_input_not_double() throws Exception {
         WalletAskValueLogic walletAskValueLogic = new WalletAskValueLogic(sessionManager, ladderConfig, "", "");
-        WeChatLogic weChatLogic = walletAskValueLogic.getReplyFromUser("id", "type", "12.a");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
-        assertEquals("Value should be a number.", weChatLogic.getReplyFromServer());
+        walletAskValueLogic.getReplyFromUser(userStatus, "id", "type", "12.a");
+        verify(userStatus).addNewLogic(argThat(new StartLogicMatcher("Value should be a number.")));
     }
 
 }

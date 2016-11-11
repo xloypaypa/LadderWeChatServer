@@ -3,10 +3,13 @@ package spring.logic;
 import org.junit.Before;
 import spring.config.LadderConfig;
 import spring.config.MockLadderConfig;
+import spring.service.cache.UserStatus;
 import spring.service.ladder.MockLadderServerSolver;
 import spring.service.session.MockSessionManager;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by xsu on 16/10/17.
@@ -18,12 +21,15 @@ public class LogicTest {
 
     protected SessionManager sessionManager;
 
+    protected UserStatus userStatus;
+
     String sessionId = "1234";
 
     @Before
     public void setUp() throws Exception {
         ladderConfig = new MockLadderConfig();
         sessionManager = new MockSessionManager((MockLadderConfig) ladderConfig);
+        this.userStatus = mock(UserStatus.class);
     }
 
     protected MockLadderServerSolver mockLoginAsWeChatProtocol(String id) throws Exception {

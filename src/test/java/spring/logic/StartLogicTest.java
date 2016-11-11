@@ -3,8 +3,12 @@ package spring.logic;
 import org.junit.Test;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
+import tools.StartLogicMatcher;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 16/10/17.
@@ -17,9 +21,8 @@ public class StartLogicTest extends LogicTest {
         sessionManager.createSession("id");
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
-        assertEquals("time out", weChatLogic.getReplyFromServer());
+        startLogic.getReplyFromUser(userStatus, "id", "message", "type");
+        verify(userStatus).addNewLogic(argThat(new StartLogicMatcher("time out")));
     }
 
     @Test
@@ -40,9 +43,8 @@ public class StartLogicTest extends LogicTest {
         mockLadderServerSolver.addReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"fail\"}".getBytes(), 100);
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
-        assertEquals("server error", weChatLogic.getReplyFromServer());
+        startLogic.getReplyFromUser(userStatus, "id", "message", "type");
+        verify(userStatus).addNewLogic(argThat(new StartLogicMatcher("server error")));
     }
 
     @Test
@@ -57,8 +59,8 @@ public class StartLogicTest extends LogicTest {
         mockLadderServerSolver.addReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"unbind account\"}".getBytes(), 100);
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
-        assertEquals(BindLogic.class, weChatLogic.getClass());
+        startLogic.getReplyFromUser(userStatus, "id", "message", "type");
+        verify(userStatus).addNewLogic(any(BindLogic.class));
     }
 
     @Test
@@ -73,7 +75,7 @@ public class StartLogicTest extends LogicTest {
         mockLadderServerSolver.addReply(ProtocolBuilder.changeConnectionUserByWeChat("id"), "changeConnectionUserByWeChat#{\"result\":\"ok\"}".getBytes(), 100);
 
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = startLogic.getReplyFromUser("id", "message", "type");
-        assertEquals(AppOrUnbindLogic.class, weChatLogic.getClass());
+        startLogic.getReplyFromUser(userStatus, "id", "message", "type");
+        verify(userStatus).addNewLogic(any(AppOrUnbindLogic.class));
     }
 }

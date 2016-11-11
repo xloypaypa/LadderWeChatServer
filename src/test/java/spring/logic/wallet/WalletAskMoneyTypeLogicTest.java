@@ -5,13 +5,14 @@ import net.sf.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import spring.logic.LogicTest;
-import spring.logic.StartLogic;
-import spring.logic.WeChatLogic;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
+import tools.StartLogicMatcher;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 2016/10/20.
@@ -55,16 +56,15 @@ public class WalletAskMoneyTypeLogicTest extends LogicTest {
     @Test
     public void should_jump_to_ask_budget_logic_if_selected_a_money_type() throws Exception {
         WalletAskMoneyTypeLogic walletAskMoneyTypeLogic = new WalletAskMoneyTypeLogic(sessionManager, ladderConfig, jsonArray);
-        WeChatLogic weChatLogic = walletAskMoneyTypeLogic.getReplyFromUser("id", "type", "1");
-        assertEquals(WalletAskBudgetTypeLogic.class, weChatLogic.getClass());
+        walletAskMoneyTypeLogic.getReplyFromUser(userStatus, "id", "type", "1");
+        verify(userStatus).addNewLogic(any(WalletAskBudgetTypeLogic.class));
     }
 
     @Test
     public void should_jump_to_exception_logic_if_selected_a_invalidate_money_type() throws Exception {
         WalletAskMoneyTypeLogic walletAskMoneyTypeLogic = new WalletAskMoneyTypeLogic(sessionManager, ladderConfig, jsonArray);
-        WeChatLogic weChatLogic = walletAskMoneyTypeLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
-        assertEquals("invalid type", weChatLogic.getReplyFromServer());
+        walletAskMoneyTypeLogic.getReplyFromUser(userStatus, "id", "type", "3");
+        verify(userStatus).addNewLogic(argThat(new StartLogicMatcher("invalid type")));
     }
 
 }

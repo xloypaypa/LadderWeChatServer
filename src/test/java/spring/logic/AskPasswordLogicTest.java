@@ -4,7 +4,8 @@ import org.junit.Test;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
 
-import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 16/10/17.
@@ -19,8 +20,8 @@ public class AskPasswordLogicTest extends LogicTest {
                 "bindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 100);
 
         AskPasswordLogic askPasswordLogic = new AskPasswordLogic(sessionManager, ladderConfig, true, "wu");
-        WeChatLogic weChatLogic = askPasswordLogic.getReplyFromUser("id", "type", "wp");
-        assertEquals(AppOrUnbindLogic.class, weChatLogic.getClass());
+        askPasswordLogic.getReplyFromUser(userStatus, "id", "type", "wp");
+        verify(userStatus).addNewLogic(any(AppOrUnbindLogic.class));
     }
 
     @Test
@@ -32,7 +33,7 @@ public class AskPasswordLogicTest extends LogicTest {
                 "bindUserAndWeChat#{\"result\":\"ok\"}".getBytes(), 100);
 
         AskPasswordLogic askPasswordLogic = new AskPasswordLogic(sessionManager, ladderConfig, false, "wu");
-        WeChatLogic weChatLogic = askPasswordLogic.getReplyFromUser("id", "type", "wp");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
+        askPasswordLogic.getReplyFromUser(userStatus, "id", "type", "wp");
+        verify(userStatus).addNewLogic(any(StartLogic.class));
     }
 }

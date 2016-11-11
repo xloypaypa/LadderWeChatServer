@@ -2,6 +2,7 @@ package spring.logic;
 
 import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
@@ -29,7 +30,7 @@ public abstract class WeChatLogic {
     
     protected abstract WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception;
 
-    public WeChatLogic getReplyFromUser(String weChatId, String messageType, String message) {
+    public void getReplyFromUser(UserStatus userStatus, String weChatId, String messageType, String message) {
         FutureTask<WeChatLogic> futureTask = new FutureTask<>(() -> {
             try {
                 createSession(weChatId);
@@ -49,10 +50,10 @@ public abstract class WeChatLogic {
         Thread thread = new Thread(futureTask);
         thread.start();
         try {
-            return futureTask.get(4500, TimeUnit.MILLISECONDS);
+            userStatus.addNewLogic(futureTask.get(4500, TimeUnit.MILLISECONDS));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             futureTask.cancel(true);
-            return new StartLogic(this.sessionManager, ladderConfig, "time out");
+            userStatus.addNewLogic(new StartLogic(this.sessionManager, ladderConfig, "time out"));
         }
     }
 

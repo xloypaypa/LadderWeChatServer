@@ -5,11 +5,14 @@ import net.sf.json.JSONObject;
 import org.junit.Test;
 import spring.logic.LogicTest;
 import spring.logic.StartLogic;
-import spring.logic.WeChatLogic;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
+import tools.StartLogicMatcher;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 2016/10/19.
@@ -31,8 +34,8 @@ public class WalletMainMenuLogicTest extends LogicTest {
     @Test
     public void should_back_to_start_logic_when_input_0() throws Exception {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "0");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
+        walletMainMenuLogic.getReplyFromUser(userStatus, "id", "type", "0");
+        verify(userStatus).addNewLogic(any(StartLogic.class));
     }
 
     @Test
@@ -56,8 +59,8 @@ public class WalletMainMenuLogicTest extends LogicTest {
                 ("getMoney#" + jsonArray.toString()).getBytes(), 100);
 
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "1");
-        assertEquals(WalletGetMoneyListLogic.class, weChatLogic.getClass());
+        walletMainMenuLogic.getReplyFromUser(userStatus, "id", "type", "1");
+        verify(userStatus).addNewLogic(any(WalletGetMoneyListLogic.class));
     }
 
     @Test
@@ -81,8 +84,8 @@ public class WalletMainMenuLogicTest extends LogicTest {
                 ("getBudget#" + jsonArray.toString()).getBytes(), 100);
 
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "2");
-        assertEquals(WalletGetBudgetListLogic.class, weChatLogic.getClass());
+        walletMainMenuLogic.getReplyFromUser(userStatus, "id", "type", "2");
+        verify(userStatus).addNewLogic(any(WalletGetBudgetListLogic.class));
     }
 
     @Test
@@ -106,8 +109,8 @@ public class WalletMainMenuLogicTest extends LogicTest {
                 ("getMoney#" + jsonArray.toString()).getBytes(), 100);
 
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(WalletAskMoneyTypeLogic.class, weChatLogic.getClass());
+        walletMainMenuLogic.getReplyFromUser(userStatus, "id", "type", "3");
+        verify(userStatus).addNewLogic(any(WalletAskMoneyTypeLogic.class));
     }
 
     @Test
@@ -122,15 +125,14 @@ public class WalletMainMenuLogicTest extends LogicTest {
                 "rollBack#{\"result\":\"ok\"}".getBytes(), 100);
 
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "9");
-        assertEquals(WalletRollbackLogic.class, weChatLogic.getClass());
+        walletMainMenuLogic.getReplyFromUser(userStatus, "id", "type", "9");
+        verify(userStatus).addNewLogic(any(WalletRollbackLogic.class));
     }
 
     @Test
     public void should_go_to_exception_logic_when_invalidate_message() throws Exception {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
-        WeChatLogic weChatLogic = walletMainMenuLogic.getReplyFromUser("id", "type", "-1");
-        assertEquals(StartLogic.class, weChatLogic.getClass());
-        assertEquals("invalid command", weChatLogic.getReplyFromServer());
+        walletMainMenuLogic.getReplyFromUser(userStatus, "id", "type", "-1");
+        verify(userStatus).addNewLogic(argThat(new StartLogicMatcher("invalid command")));
     }
 }

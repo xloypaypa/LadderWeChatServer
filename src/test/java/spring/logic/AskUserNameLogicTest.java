@@ -2,7 +2,8 @@ package spring.logic;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by xsu on 16/10/17.
@@ -13,7 +14,7 @@ public class AskUserNameLogicTest extends LogicTest {
     @Test
     public void should_jump_to_ask_password_logic() throws Exception {
         AskUserNameLogic askUserNameLogic = new AskUserNameLogic(sessionManager, ladderConfig, true);
-        WeChatLogic weChatLogic = askUserNameLogic.getReplyFromUser("id", "type", "3");
-        assertEquals(AskPasswordLogic.class, weChatLogic.getClass());
+        askUserNameLogic.getReplyFromUser(userStatus, "id", "type", "3");
+        verify(userStatus).addNewLogic(any(AskPasswordLogic.class));
     }
 }

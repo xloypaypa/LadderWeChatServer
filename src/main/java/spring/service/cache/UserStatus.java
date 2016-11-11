@@ -26,10 +26,14 @@ public class UserStatus {
     }
 
     public WeChatLogic getNextLogic() {
-        return currentLogic.poll();
+        return currentLogic.peek();
     }
 
     public void addNewLogic(WeChatLogic weChatLogic) {
         this.currentLogic.add(weChatLogic);
+    }
+
+    public void runLogic(String weChatId, String messageType, String message) {
+        currentLogic.poll().getReplyFromUser(this, weChatId, messageType, message);
     }
 }
