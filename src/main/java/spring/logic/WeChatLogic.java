@@ -38,7 +38,9 @@ public abstract class WeChatLogic {
             try {
                 solveLadderLogic(userStatus, weChatId, messageType, message);
             } catch (Exception e) {
+                userStatus.clear();
                 userStatus.addNewLogic(new StartLogic(this.sessionManager, ladderConfig, "exception: " + e.getMessage()));
+                e.printStackTrace();
             }
             closeSession(weChatId);
             return true;
@@ -49,6 +51,7 @@ public abstract class WeChatLogic {
             futureTask.get(4500, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             futureTask.cancel(true);
+            userStatus.clear();
             userStatus.addNewLogic(new StartLogic(this.sessionManager, ladderConfig, "time out"));
         }
     }

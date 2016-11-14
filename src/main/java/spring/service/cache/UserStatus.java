@@ -29,6 +29,10 @@ public class UserStatus {
         return currentLogic.peek();
     }
 
+    public void clear() {
+        this.currentLogic.clear();
+    }
+
     public void addNewLogic(WeChatLogic weChatLogic) {
         this.currentLogic.add(weChatLogic);
     }
