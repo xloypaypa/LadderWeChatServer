@@ -5,6 +5,7 @@ import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
 import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
@@ -27,7 +28,7 @@ public class WalletMainMenuLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
         switch (message) {
             case "1":
                 loginAsUser(weChatId);
@@ -35,32 +36,38 @@ public class WalletMainMenuLogic extends WeChatLogic {
                 waitForReply(weChatId);
                 LadderReply moneyList = askLadderServer(weChatId, ProtocolBuilder.getMoney());
                 JSONArray moneyArray = JSONArray.fromObject(new String(moneyList.getBody()));
-                return new WalletGetMoneyListLogic(sessionManager, ladderConfig, moneyArray, this);
+                userStatus.addNewLogic(new WalletGetMoneyListLogic(sessionManager, ladderConfig, moneyArray, this));
+                break;
             case "2":
                 loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
                 waitForReply(weChatId);
                 LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget());
                 JSONArray budgetArray = JSONArray.fromObject(new String(budgetList.getBody()));
-                return new WalletGetBudgetListLogic(sessionManager, ladderConfig, budgetArray, this);
+                userStatus.addNewLogic(new WalletGetBudgetListLogic(sessionManager, ladderConfig, budgetArray, this));
+                break;
             case "3":
                 loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
                 waitForReply(weChatId);
                 LadderReply moneyListForUse = askLadderServer(weChatId, ProtocolBuilder.getMoney());
                 JSONArray moneyArrayForUse = JSONArray.fromObject(new String(moneyListForUse.getBody()));
-                return new WalletAskMoneyTypeLogic(sessionManager, ladderConfig, moneyArrayForUse);
+                userStatus.addNewLogic(new WalletAskMoneyTypeLogic(sessionManager, ladderConfig, moneyArrayForUse));
+                break;
             case "9":
                 loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
                 waitForReply(weChatId);
                 LadderReply rollBackReply = askLadderServer(weChatId, ProtocolBuilder.rollBack());
                 JSONObject rollBackMessage = JSONObject.fromObject(new String(rollBackReply.getBody()));
-                return new WalletRollbackLogic(sessionManager, ladderConfig, rollBackMessage.getString("result"), this);
+                userStatus.addNewLogic(new WalletRollbackLogic(sessionManager, ladderConfig, rollBackMessage.getString("result"), this));
+                break;
             case "0":
-                return new StartLogic(sessionManager, ladderConfig);
+                userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig));
+                break;
             default:
-                return new StartLogic(sessionManager, ladderConfig, "invalid command");
+                userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig, "invalid command"));
+                break;
         }
     }
 }

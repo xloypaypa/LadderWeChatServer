@@ -48,8 +48,8 @@ public class WalletGetMoneyListLogicTest extends LogicTest {
     public void should_use_main_menu_logic_when_get_message() throws Exception {
         WalletGetMoneyListLogic walletGetMoneyListLogic = new WalletGetMoneyListLogic(sessionManager, ladderConfig, null, walletMainMenuLogic);
 
-        walletGetMoneyListLogic.solveLadderLogic("id", "type", "message");
+        walletGetMoneyListLogic.solveLadderLogic(userStatus, "id", "type", "message");
 
-        verify(walletMainMenuLogic).solveLadderLogic("id", "type", "message");
+        verify(walletMainMenuLogic).solveLadderLogic(userStatus, "id", "type", "message");
     }
 }

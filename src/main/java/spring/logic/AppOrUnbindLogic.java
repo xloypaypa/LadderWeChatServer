@@ -2,6 +2,7 @@ package spring.logic;
 
 import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
@@ -22,7 +23,7 @@ class AppOrUnbindLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
         askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()));
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
@@ -34,13 +35,16 @@ class AppOrUnbindLogic extends WeChatLogic {
 
         switch (message) {
             case "1":
-                return new UseAppLogic(this.sessionManager, this.ladderConfig);
+                userStatus.addNewLogic(new UseAppLogic(this.sessionManager, this.ladderConfig));
+                break;
             case "2":
                 askLadderServer(weChatId,
                         ProtocolBuilder.unbindUserAndWeChat(weChatId));
-                return new StartLogic(this.sessionManager, this.ladderConfig);
+                userStatus.addNewLogic(new StartLogic(this.sessionManager, this.ladderConfig));
+                break;
             default:
-                return new StartLogic(this.sessionManager, ladderConfig, "invalidate input");
+                userStatus.addNewLogic(new StartLogic(this.sessionManager, ladderConfig, "invalidate input"));
+                break;
         }
     }
 

@@ -2,6 +2,7 @@ package spring.logic.wallet;
 
 import spring.config.LadderConfig;
 import spring.logic.WeChatLogic;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 
 /**
@@ -25,7 +26,7 @@ class WalletUseMoneyResultLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
-        return walletMainMenuLogic.solveLadderLogic(weChatId, messageType, message);
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
+        walletMainMenuLogic.solveLadderLogic(userStatus, weChatId, messageType, message);
     }
 }

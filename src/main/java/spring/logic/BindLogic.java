@@ -1,6 +1,7 @@
 package spring.logic;
 
 import spring.config.LadderConfig;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 
 /**
@@ -19,14 +20,17 @@ class BindLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
         switch (message) {
             case "1":
-                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, true);
+                userStatus.addNewLogic(new AskUserNameLogic(this.sessionManager, this.ladderConfig, true));
+                break;
             case "2":
-                return new AskUserNameLogic(this.sessionManager, this.ladderConfig, false);
+                userStatus.addNewLogic(new AskUserNameLogic(this.sessionManager, this.ladderConfig, false));
+                break;
             default:
-                return new StartLogic(this.sessionManager, this.ladderConfig, "invalidate input");
+                userStatus.addNewLogic(new StartLogic(this.sessionManager, this.ladderConfig, "invalidate input"));
+                break;
         }
     }
 

@@ -2,6 +2,7 @@ package spring.logic;
 
 import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
@@ -26,7 +27,7 @@ class AskPasswordLogic extends WeChatLogic {
     }
 
     @Override
-    public WeChatLogic solveLadderLogic(String weChatId, String messageType, String password) throws Exception {
+    public void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String password) throws Exception {
         askLadderServer(weChatId, ProtocolBuilder.key(ladderConfig.getPublicKey()));
         sessionManager.getSessionMessage(weChatId).getLadderServerSolver().setEncrypt(true);
 
@@ -39,13 +40,13 @@ class AskPasswordLogic extends WeChatLogic {
         if (forBind) {
             askLadderServer(weChatId,
                     ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId));
-            return new AppOrUnbindLogic(this.sessionManager, this.ladderConfig);
+            userStatus.addNewLogic(new AppOrUnbindLogic(this.sessionManager, this.ladderConfig));
         } else {
             askLadderServer(weChatId,
                     ProtocolBuilder.register(username, password));
             askLadderServer(weChatId,
                     ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId));
-            return new StartLogic(this.sessionManager, this.ladderConfig);
+            userStatus.addNewLogic(new StartLogic(this.sessionManager, this.ladderConfig));
         }
     }
 }

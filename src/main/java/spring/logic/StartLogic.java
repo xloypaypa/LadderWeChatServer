@@ -2,6 +2,7 @@ package spring.logic;
 
 import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 
 /**
@@ -32,19 +33,23 @@ public class StartLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
         LadderReply changeReply = loginAsUser(weChatId);
         String result = JSONObject.fromObject(new String(changeReply.getBody())).getString("result");
 
         switch (result) {
             case "fail":
-                return new StartLogic(this.sessionManager, ladderConfig, "server error");
+                userStatus.addNewLogic(new StartLogic(this.sessionManager, ladderConfig, "server error"));
+                break;
             case "unbind account":
-                return new BindLogic(this.sessionManager, this.ladderConfig);
+                userStatus.addNewLogic(new BindLogic(this.sessionManager, this.ladderConfig));
+                break;
             case "ok":
-                return new AppOrUnbindLogic(this.sessionManager, this.ladderConfig);
+                userStatus.addNewLogic(new AppOrUnbindLogic(this.sessionManager, this.ladderConfig));
+                break;
             default:
-                return new TestLogic(sessionManager, ladderConfig, new String(changeReply.getBody()));
+                userStatus.addNewLogic(new TestLogic(sessionManager, ladderConfig, new String(changeReply.getBody())));
+                break;
         }
     }
 }

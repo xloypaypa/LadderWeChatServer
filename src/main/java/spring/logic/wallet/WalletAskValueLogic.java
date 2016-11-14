@@ -4,6 +4,7 @@ import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
 import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
@@ -27,7 +28,7 @@ class WalletAskValueLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
         try {
             double value = Double.parseDouble(message);
             loginAsUser(weChatId);
@@ -35,10 +36,10 @@ class WalletAskValueLogic extends WeChatLogic {
             waitForReply(weChatId);
             LadderReply useReply = askLadderServer(weChatId, ProtocolBuilder.useMoney(moneyType, budgetType, value));
             JSONObject useMessage = JSONObject.fromObject(new String(useReply.getBody()));
-            return new WalletUseMoneyResultLogic(sessionManager, ladderConfig,
-                    new WalletMainMenuLogic(sessionManager, ladderConfig), useMessage.getString("result"));
+            userStatus.addNewLogic(new WalletUseMoneyResultLogic(sessionManager, ladderConfig,
+                    new WalletMainMenuLogic(sessionManager, ladderConfig), useMessage.getString("result")));
         } catch (NumberFormatException e) {
-            return new StartLogic(sessionManager, ladderConfig, "Value should be a number.");
+            userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig, "Value should be a number."));
         }
     }
 }

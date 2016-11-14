@@ -7,10 +7,7 @@ import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * Created by xsu on 16/10/12.
@@ -28,29 +25,28 @@ public abstract class WeChatLogic {
 
     public abstract String getReplyFromServer();
     
-    protected abstract WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception;
+    protected abstract void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception;
 
     public void getReplyFromUser(UserStatus userStatus, String weChatId, String messageType, String message) {
-        FutureTask<WeChatLogic> futureTask = new FutureTask<>(() -> {
+        FutureTask futureTask = new FutureTask<>(() -> {
             try {
                 createSession(weChatId);
             } catch (IOException e) {
                 return new StartLogic(this.sessionManager, ladderConfig, "can't connect");
             }
 
-            WeChatLogic result;
             try {
-                result = solveLadderLogic(weChatId, messageType, message);
+                solveLadderLogic(userStatus, weChatId, messageType, message);
             } catch (Exception e) {
-                result = new StartLogic(this.sessionManager, ladderConfig, "exception: " + e.getMessage());
+                userStatus.addNewLogic(new StartLogic(this.sessionManager, ladderConfig, "exception: " + e.getMessage()));
             }
             closeSession(weChatId);
-            return result;
+            return true;
         });
         Thread thread = new Thread(futureTask);
         thread.start();
         try {
-            userStatus.addNewLogic(futureTask.get(4500, TimeUnit.MILLISECONDS));
+            futureTask.get(4500, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             futureTask.cancel(true);
             userStatus.addNewLogic(new StartLogic(this.sessionManager, ladderConfig, "time out"));

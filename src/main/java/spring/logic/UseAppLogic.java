@@ -2,6 +2,7 @@ package spring.logic;
 
 import spring.config.LadderConfig;
 import spring.logic.wallet.WalletMainMenuLogic;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 
 /**
@@ -25,16 +26,16 @@ class UseAppLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
         try {
             int index = Integer.parseInt(message) - 1;
             if (index < 0 || index >= ladderConfig.getAvailableApp().length) {
-                return new StartLogic(sessionManager, ladderConfig, "no such application");
+                userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig, "no such application"));
             } else {
-                return new WalletMainMenuLogic(sessionManager, ladderConfig);
+                userStatus.addNewLogic(new WalletMainMenuLogic(sessionManager, ladderConfig));
             }
         } catch (NumberFormatException e) {
-            return new StartLogic(sessionManager, ladderConfig, "no such application");
+            userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig, "no such application"));
         }
     }
 }

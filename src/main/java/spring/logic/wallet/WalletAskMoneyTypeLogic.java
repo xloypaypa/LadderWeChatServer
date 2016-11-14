@@ -5,6 +5,7 @@ import net.sf.json.JSONObject;
 import spring.config.LadderConfig;
 import spring.logic.StartLogic;
 import spring.logic.WeChatLogic;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 import tools.ProtocolBuilder;
 
@@ -32,11 +33,11 @@ class WalletAskMoneyTypeLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
         try {
             int index = Integer.parseInt(message) - 1;
             if (index < 0 || index >= moneyTypes.size()) {
-                return new StartLogic(sessionManager, ladderConfig, "invalid type");
+                userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig, "invalid type"));
             } else {
                 loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
@@ -44,10 +45,10 @@ class WalletAskMoneyTypeLogic extends WeChatLogic {
                 LadderReply budgetList = askLadderServer(weChatId, ProtocolBuilder.getBudget());
                 JSONArray budgetArray = JSONArray.fromObject(new String(budgetList.getBody()));
 
-                return new WalletAskBudgetTypeLogic(sessionManager, ladderConfig, budgetArray, moneyTypes.getJSONObject(index).getString("typename"));
+                userStatus.addNewLogic(new WalletAskBudgetTypeLogic(sessionManager, ladderConfig, budgetArray, moneyTypes.getJSONObject(index).getString("typename")));
             }
         } catch (NumberFormatException e) {
-            return new StartLogic(sessionManager, ladderConfig, "invalid type");
+            userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig, "invalid type"));
         }
     }
 }

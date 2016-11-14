@@ -1,6 +1,7 @@
 package spring.logic;
 
 import spring.config.LadderConfig;
+import spring.service.cache.UserStatus;
 import spring.service.session.SessionManager;
 
 class TestLogic extends WeChatLogic {
@@ -17,8 +18,8 @@ class TestLogic extends WeChatLogic {
     }
 
     @Override
-    protected WeChatLogic solveLadderLogic(String weChatId, String messageType, String message) throws Exception {
-        return new StartLogic(sessionManager, ladderConfig);
+    protected void solveLadderLogic(UserStatus userStatus, String weChatId, String messageType, String message) throws Exception {
+        userStatus.addNewLogic(new StartLogic(sessionManager, ladderConfig));
     }
 
 }

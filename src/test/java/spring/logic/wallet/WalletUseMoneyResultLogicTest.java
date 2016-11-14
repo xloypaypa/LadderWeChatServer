@@ -35,9 +35,9 @@ public class WalletUseMoneyResultLogicTest extends LogicTest {
         WalletUseMoneyResultLogic walletUseMoneyResultLogic =
                 new WalletUseMoneyResultLogic(sessionManager, ladderConfig, walletMainMenuLogic, "ok");
 
-        walletUseMoneyResultLogic.solveLadderLogic("id", "type", "message");
+        walletUseMoneyResultLogic.solveLadderLogic(userStatus, "id", "type", "message");
 
-        verify(walletMainMenuLogic).solveLadderLogic("id", "type", "message");
+        verify(walletMainMenuLogic).solveLadderLogic(userStatus, "id", "type", "message");
     }
 
 }
