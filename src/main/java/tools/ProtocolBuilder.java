@@ -93,4 +93,20 @@ public class ProtocolBuilder {
         return ("useMoney#" + body).getBytes();
     }
 
+    public static byte[] addMoney(String typename, double value) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("typename", typename);
+        jsonObject.put("value", value);
+        String body = jsonObject.toString();
+        return ("addMoney#" + body).getBytes();
+    }
+
+    public static byte[] addBudget(String typename, double value) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("typename", typename);
+        jsonObject.put("value", value);
+        String body = jsonObject.toString();
+        return ("addBudget#" + body).getBytes();
+    }
+
 }

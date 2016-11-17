@@ -25,7 +25,9 @@ public class WalletMainMenuLogicTest extends LogicTest {
         WalletMainMenuLogic walletMainMenuLogic = new WalletMainMenuLogic(sessionManager, ladderConfig);
         assertEquals("input 1 to get money list;\n" +
                         "input 2 to get budget list;\n" +
-                        "input 3 to use money;\n" +
+                        "input 3 to create money type;\n" +
+                        "input 4 to create budget type;\n" +
+                        "input 5 to use money;\n" +
                         "input 9 to roll back last operation;\n" +
                         "input 0 to exit app;",
                 walletMainMenuLogic.getReplyFromServer());

@@ -22,7 +22,9 @@ public class WalletMainMenuLogic extends WeChatLogic {
     public String getReplyFromServer() {
         return "input 1 to get money list;\n" +
                 "input 2 to get budget list;\n" +
-                "input 3 to use money;\n" +
+                "input 3 to create money type;\n" +
+                "input 4 to create budget type;\n" +
+                "input 5 to use money;\n" +
                 "input 9 to roll back last operation;\n" +
                 "input 0 to exit app;";
     }
@@ -47,6 +49,10 @@ public class WalletMainMenuLogic extends WeChatLogic {
                 userStatus.addNewLogic(new WalletGetBudgetListLogic(sessionManager, ladderConfig, budgetArray, this));
                 break;
             case "3":
+            case "4":
+                userStatus.addNewLogic(new WalletCreateMoneyOrBudgetLogic(sessionManager, ladderConfig, message));
+                break;
+            case "5":
                 loginAsUser(weChatId);
                 askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
                 waitForReply(weChatId);
