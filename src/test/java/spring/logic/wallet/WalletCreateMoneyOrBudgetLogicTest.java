@@ -27,6 +27,12 @@ public class WalletCreateMoneyOrBudgetLogicTest extends LogicTest {
     @Test
     public void should_ask_app_to_add_entity() throws Exception {
         MockLadderServerSolver mockLadderServerSolver = mockLoginAsWeChatProtocol("id");
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/useApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.useApp("wallet"),
+                "/loginApp#{\"result\":\"ok\"}".getBytes(), 100);
+        mockLadderServerSolver.addReply(ProtocolBuilder.useMoney("money", "budget", 12.3),
+                "useMoney#{\"result\":\"ok\"}".getBytes(), 100);
         mockLadderServerSolver.addReply(ProtocolBuilder.addMoney("message", 100),
                 "/addMoney#{\"result\":\"ok\"}".getBytes(), 100);
 

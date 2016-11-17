@@ -44,6 +44,9 @@ class WalletCreateMoneyOrBudgetLogic extends WeChatLogic {
             this.param = "value";
             userStatus.addNewLogic(this);
         } else if (param.equals("value")) {
+            loginAsUser(weChatId);
+            askLadderServer(weChatId, ProtocolBuilder.useApp("wallet"));
+            waitForReply(weChatId);
             if (entityType.equals("money")) {
                 askLadderServer(weChatId, ProtocolBuilder.addMoney(typename, Double.parseDouble(message)));
             } else {
