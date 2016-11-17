@@ -6,6 +6,7 @@ import spring.logic.WeChatLogic;
 import spring.service.ladder.MockLadderServerSolver;
 import tools.ProtocolBuilder;
 
+import static net.sf.ezmorph.test.ArrayAssertions.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,6 +45,16 @@ public class WalletCreateMoneyOrBudgetLogicTest extends LogicTest {
         walletCreateMoneyOrBudgetLogic.solveLadderLogic(userStatus, "id", "type", "100");
 
         verify(userStatus, times(2)).addNewLogic(any(WeChatLogic.class));
+
+        assertEquals("create ok\n" +
+                "\n" +
+                "input 1 to get money list;\n" +
+                "input 2 to get budget list;\n" +
+                "input 3 to create money type;\n" +
+                "input 4 to create budget type;\n" +
+                "input 5 to use money;\n" +
+                "input 9 to roll back last operation;\n" +
+                "input 0 to exit app;", walletCreateMoneyOrBudgetLogic.getReplyFromServer());
     }
 
 }
