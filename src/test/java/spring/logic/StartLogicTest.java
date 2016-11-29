@@ -28,7 +28,7 @@ public class StartLogicTest extends LogicTest {
     @Test
     public void can_send_custom_message() throws Exception {
         StartLogic startLogic = new StartLogic(sessionManager, ladderConfig, "test message");
-        assertEquals("test message", startLogic.getReplyFromServer());
+        assertEquals("test message\nPlease input any thing to restart.", startLogic.getReplyFromServer());
     }
 
     @Test

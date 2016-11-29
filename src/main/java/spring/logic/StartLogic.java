@@ -26,9 +26,9 @@ public class StartLogic extends WeChatLogic {
     @Override
     public String getReplyFromServer() {
         if (this.message != null) {
-            return this.message;
+            return this.message + "\nPlease input any thing to restart.";
         } else {
-            return "back to start logic";
+            return "back to start logic\nPlease input any thing to restart.";
         }
     }
 

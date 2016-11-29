@@ -9,7 +9,7 @@ public class StartLogicMatcher implements Matcher<StartLogic> {
     private String message;
 
     public StartLogicMatcher(String message) {
-        this.message = message;
+        this.message = message + "\nPlease input any thing to restart.";
     }
 
     @Override
