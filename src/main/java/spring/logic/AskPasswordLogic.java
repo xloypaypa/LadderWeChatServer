@@ -42,11 +42,16 @@ class AskPasswordLogic extends WeChatLogic {
                     ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId));
             userStatus.addNewLogic(new AppOrUnbindLogic(this.sessionManager, this.ladderConfig));
         } else {
-            askLadderServer(weChatId,
+            LadderReply registerReply = askLadderServer(weChatId,
                     ProtocolBuilder.register(username, password));
-            askLadderServer(weChatId,
-                    ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId));
-            userStatus.addNewLogic(new StartLogic(this.sessionManager, this.ladderConfig));
+            String registerResult = JSONObject.fromObject(new String(registerReply.getBody())).getString("result");
+            if (registerResult.equals("ok")) {
+                askLadderServer(weChatId,
+                        ProtocolBuilder.bindUserAndWeChat(username, password, sessionId, weChatId));
+                userStatus.addNewLogic(new StartLogic(this.sessionManager, this.ladderConfig, "register successfully"));
+            } else {
+                userStatus.addNewLogic(new StartLogic(this.sessionManager, this.ladderConfig, "register failed"));
+            }
         }
     }
 }
